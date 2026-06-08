@@ -1,21 +1,17 @@
 from contextlib import asynccontextmanager
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
-from database import init_db, get_prices, get_current_price
+from database import init_db, get_prices, get_current_price, get_suggestions
+from suggestions import generate_suggestions
 
 load_dotenv()
-
-scheduler = AsyncIOScheduler()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
-    scheduler.start()
     yield
-    scheduler.shutdown()
 
 
 app = FastAPI(title="Energy Warden", lifespan=lifespan)
@@ -33,3 +29,12 @@ async def prices():
 @app.get("/prices/current")
 async def prices_current():
     return get_current_price()
+
+@app.post("/suggestions/generate")
+async def suggestions_generate():
+    await generate_suggestions()
+    return [dict(row) for row in get_suggestions()]
+
+@app.get("/suggestions")
+async def suggestions():
+    return [dict(row) for row in get_suggestions()]
