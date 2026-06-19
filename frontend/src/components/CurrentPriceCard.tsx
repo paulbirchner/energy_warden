@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getCurrentPrice } from "../api/energyWardenApi";
 import { formatCentKwh } from "../utils/priceUtils";
 
+/** Lädt und zeigt den aktuellen Strompreis inklusive Lade- und Fehlerzustand. */
 export function CurrentPriceCard() {
   const [price, setPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);

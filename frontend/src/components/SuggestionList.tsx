@@ -4,6 +4,7 @@ import type { Suggestion } from "../types/energyWarden";
 import { GenerateSuggestionsButton } from "./GenerateSuggestionsButton";
 import { SuggestionCard } from "./SuggestionCard";
 
+/** Lädt, aktualisiert und rendert die Empfehlungsliste des Backends. */
 export function SuggestionList() {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(true);

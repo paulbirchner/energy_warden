@@ -6,10 +6,12 @@ type Props = {
   onGenerated: (suggestions: Suggestion[]) => void;
 };
 
+/** Startet die serverseitige Empfehlungsgenerierung und meldet das Ergebnis zurück. */
 export function GenerateSuggestionsButton({ onGenerated }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
+  /** Kapselt Lade-, Erfolgs- und Fehlerzustand des POST-Aufrufs. */
   async function handleClick() {
     setLoading(true);
     setError(false);

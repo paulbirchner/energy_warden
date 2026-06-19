@@ -6,6 +6,7 @@ type Props = {
   suggestion: Suggestion;
 };
 
+/** Übersetzt technische API-Kategorien in verständliche deutsche Bezeichnungen. */
 function translateCategory(category: Suggestion["category"]): string {
   switch (category) {
     case "time_shift":
@@ -19,6 +20,7 @@ function translateCategory(category: Suggestion["category"]): string {
   }
 }
 
+/** Stellt eine einzelne serverseitig erzeugte Empfehlung dar. */
 export function SuggestionCard({ suggestion }: Props) {
   return (
     <article>

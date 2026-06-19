@@ -6,9 +6,11 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
+  // Generierte Produktionsdateien werden nicht statisch geprüft.
   globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
+    // Kombiniert TypeScript-, React-Hook- und Fast-Refresh-Regeln.
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,

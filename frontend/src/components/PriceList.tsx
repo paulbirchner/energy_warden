@@ -4,6 +4,7 @@ import type { PriceData } from "../types/energyWarden";
 import { formatCentKwh } from "../utils/priceUtils";
 import { formatHourFromUnix } from "../utils/timeUtils";
 
+/** Zeigt die stündlichen Preise des Tages als einfache Liste. */
 export function PriceList() {
   const [prices, setPrices] = useState<PriceData[]>([]);
   const [loading, setLoading] = useState(true);

@@ -1,73 +1,221 @@
-# React + TypeScript + Vite
+# Energy Warden – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Das Energy-Warden-Frontend ist eine Beratungs-Webanwendung zur Erfassung und
+Auswertung von Energieverbrauch. Es unterstützt unter anderem Zählerstände,
+Rechnungen, Geräteschätzungen, Tarife, Analysen, Empfehlungen,
+Benachrichtigungen und Monatsberichte.
 
-Currently, two official plugins are available:
+Das Frontend wurde mit React, TypeScript und Vite umgesetzt. Die meisten
+Funktionen arbeiten aktuell vollständig im Browser und speichern ihre Daten im
+`localStorage`. Für Live-Strompreise und die älteren KI-Empfehlungen kann das
+vorhandene Backend optional gestartet werden.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Voraussetzungen
 
-## React Compiler
+Für die lokale Entwicklung werden benötigt:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [Node.js](https://nodejs.org/) `20.19` oder neuer beziehungsweise `22.12` oder neuer
+- npm (wird zusammen mit Node.js installiert)
+- ein moderner Browser, beispielsweise Chrome, Edge oder Firefox
+- optional: Git zum Klonen des Projekts
 
-## Expanding the ESLint configuration
+Die installierten Versionen lassen sich im Terminal prüfen:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+node --version
+npm --version
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 1. Projekt öffnen
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Das Repository klonen oder den vorhandenen Projektordner in VS Code öffnen:
+
+```bash
+git clone <repository-url>
+cd energy_warden/frontend
+```
+
+Wenn das Repository bereits lokal vorhanden ist, reicht der Wechsel in den
+Frontend-Ordner:
+
+```powershell
+cd C:\Pfad\zum\Projekt\energy_warden\frontend
+```
+
+### 2. Abhängigkeiten installieren
+
+Für eine reproduzierbare Installation anhand der `package-lock.json`:
+
+```bash
+npm ci
+```
+
+Alternativ können die Abhängigkeiten mit folgendem Befehl installiert werden:
+
+```bash
+npm install
+```
+
+Unter Windows PowerShell kann die Ausführung von `npm.ps1` durch die lokale
+Execution Policy blockiert sein. In diesem Fall `npm.cmd` verwenden:
+
+```powershell
+npm.cmd ci
+```
+
+### 3. Entwicklungsserver starten
+
+```bash
+npm run dev
+```
+
+Unter Windows PowerShell gegebenenfalls:
+
+```powershell
+npm.cmd run dev
+```
+
+Vite zeigt anschließend die lokale Adresse im Terminal an. Standardmäßig ist
+die Anwendung hier erreichbar:
+
+```text
+http://localhost:5173
+```
+
+Änderungen am Quellcode werden während der Entwicklung automatisch im Browser
+aktualisiert.
+
+## Optional: Backend starten
+
+Das Frontend ist auch ohne Backend bedienbar. Ohne Backend sind lediglich
+API-basierte Funktionen wie der Live-Strompreis nicht verfügbar.
+
+Das vorhandene Python-Backend kann aus dem Projektstamm in einem zweiten
+Terminal gestartet werden:
+
+```powershell
+cd C:\Pfad\zum\Projekt\energy_warden
+.\.venv\Scripts\python.exe -m uvicorn main:app --reload
+```
+
+Das Backend läuft anschließend standardmäßig unter:
+
+```text
+http://127.0.0.1:8000
+```
+
+Diese Adresse ist derzeit in `src/api/energyWardenApi.ts` als
+`API_BASE_URL` hinterlegt.
+
+## Verfügbare npm-Befehle
+
+| Befehl | Beschreibung |
+| --- | --- |
+| `npm run dev` | Startet den Vite-Entwicklungsserver mit Hot Reload. |
+| `npm run build` | Prüft TypeScript und erstellt den Produktions-Build. |
+| `npm run lint` | Prüft den Quellcode mit ESLint. |
+| `npm run preview` | Zeigt den zuvor erzeugten Produktions-Build lokal an. |
+
+Unter Windows können alle Befehle bei Bedarf mit `npm.cmd` statt `npm`
+ausgeführt werden.
+
+## Produktions-Build testen
+
+```bash
+npm run build
+npm run preview
+```
+
+Der Build wird im Ordner `dist/` erzeugt. Vite zeigt beim Start von `preview`
+die lokale Vorschauadresse im Terminal an.
+
+## Funktionsbereiche
+
+- **Dashboard:** Verbrauch, Kosten, Strompreis, Hotspots und Einsparfortschritt
+- **Verbrauch:** Zählerstände, Rechnungen, Dokumentmetadaten und Geräteschätzungen
+- **Tarife & Kosten:** Strom-/Wassertarife, Kostenberechnung und Tarifvergleich
+- **Analyse:** Monatsentwicklung, Haushaltsvergleich, Auffälligkeiten und Prognosen
+- **Empfehlungen:** personalisierte Maßnahmen mit berechnetem Einsparpotenzial
+- **Hinweise:** Erinnerungen, Verbrauchswarnungen und Browser-Benachrichtigungen
+- **Berichte:** Monatsberichte, CSV-Export und PDF-Ausgabe über den Druckdialog
+
+## Lokale Datenspeicherung
+
+Bis zur Anbindung der entsprechenden Backend-Endpunkte werden Fachdaten im
+`localStorage` des Browsers gespeichert. Dadurch bleiben Eingaben nach einem
+Neuladen der Seite erhalten, gelten aber nur für den jeweiligen Browser und die
+verwendete lokale Adresse.
+
+Folgende Daten werden lokal gespeichert:
+
+- Verbrauchsdaten und Zählerstände
+- Rechnungswerte und Dateimetadaten
+- Geräteschätzungen
+- Strom- und Wassertarife
+- Benachrichtigungseinstellungen
+- Bearbeitungsstand von Empfehlungen
+
+Bei Rechnungsuploads werden aktuell nur Dateiname und Dateigröße gespeichert.
+Die eigentliche Datei wird noch nicht übertragen oder dauerhaft abgelegt.
+
+Zum Zurücksetzen der lokalen Daten kann im Browser unter den Entwicklertools
+der Anwendungsspeicher für `http://localhost:5173` gelöscht werden.
+
+## Browser-Benachrichtigungen
+
+Browser-Benachrichtigungen müssen ausdrücklich freigegeben werden. Ohne
+Push-Backend werden Hinweise nur erzeugt, solange Energy Warden im Browser
+geöffnet ist. Auf `localhost` werden Benachrichtigungen von den gängigen
+Browsern als sicherer Entwicklungskontext unterstützt.
+
+## Projektstruktur
+
+```text
+frontend/
+├── public/                 Statische Dateien
+├── src/
+│   ├── api/                Kommunikation mit dem vorhandenen Backend
+│   ├── components/         Wiederverwendbare UI-Komponenten
+│   ├── hooks/              Lokaler Zustand und localStorage-Persistenz
+│   ├── pages/              Funktionsseiten der Anwendung
+│   ├── types/              Gemeinsame TypeScript-Datenmodelle
+│   ├── utils/              Analyse-, Empfehlungs- und Berichtslogik
+│   ├── App.tsx             Navigation und Seitenauswahl
+│   ├── App.css             Komponenten- und Seitenstyles
+│   └── main.tsx            React-Einstiegspunkt
+├── package.json            Abhängigkeiten und npm-Skripte
+└── vite.config.ts          Vite-Konfiguration
+```
+
+## Fehlerbehebung
+
+### `npm.ps1` kann nicht ausgeführt werden
+
+PowerShell blockiert das npm-Skript. Ohne Änderung der Execution Policy kann
+direkt die Windows-CLI verwendet werden:
+
+```powershell
+npm.cmd run dev
+```
+
+### Live-Strompreis ist nicht erreichbar
+
+Prüfen, ob das Backend unter `http://127.0.0.1:8000` läuft. Die übrigen lokalen
+Frontend-Funktionen können trotzdem weiterverwendet werden.
+
+### Port 5173 ist bereits belegt
+
+Vite wählt normalerweise automatisch einen anderen freien Port. Die tatsächlich
+verwendete Adresse steht im Terminal.
+
+### Installation verhält sich unerwartet
+
+Zunächst die Node.js-Version prüfen und anschließend die Abhängigkeiten anhand
+der Lockdatei erneut installieren:
+
+```bash
+npm ci
+npm run build
 ```

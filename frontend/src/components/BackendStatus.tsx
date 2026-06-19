@@ -3,6 +3,7 @@ import { getHealth } from "../api/energyWardenApi";
 
 type Status = "loading" | "online" | "offline";
 
+/** Zeigt den Erreichbarkeitsstatus des vorhandenen Backends an. */
 export function BackendStatus() {
   const [status, setStatus] = useState<Status>("loading");
 
