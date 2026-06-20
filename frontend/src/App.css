@@ -65,6 +65,7 @@ button { cursor: pointer; }
 
 nav { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
 nav::-webkit-scrollbar { display: none; }
+.topbar-actions { align-items: center; display: flex; gap: 10px; min-width: 0; }
 
 .nav-item {
   background: transparent;
@@ -78,6 +79,29 @@ nav::-webkit-scrollbar { display: none; }
 
 .nav-item:hover { background: #f2f6f4; color: var(--ink); }
 .nav-item.active { background: var(--green-soft); color: var(--green-dark); }
+
+/* Demo-Modus für reproduzierbare PoC-Präsentationen. */
+.demo-data-controls { flex: 0 0 auto; }
+.demo-trigger { align-items: center; background: #f1f5f3; border: 1px solid #d7e1dc; border-radius: 99px; color: var(--muted); display: inline-flex; font-size: 9px; font-weight: 800; gap: 6px; padding: 8px 10px; text-transform: uppercase; }
+.demo-trigger > span { background: #9ba9a2; border-radius: 50%; height: 6px; width: 6px; }
+.demo-trigger:hover { background: #e7f1ec; color: var(--green); }
+.demo-trigger.active { background: #e4f4eb; border-color: #aed3c1; color: var(--green); }
+.demo-trigger.active > span { background: #31a96f; box-shadow: 0 0 0 4px rgba(49,169,111,.13); }
+.demo-modal-backdrop { align-items: center; background: rgba(13, 29, 23, .56); display: flex; inset: 0; justify-content: center; padding: 20px; position: fixed; z-index: 100; }
+.demo-modal { background: white; border-radius: 19px; box-shadow: 0 24px 80px rgba(9,31,22,.28); max-width: 440px; padding: 28px; position: relative; width: 100%; }
+.demo-close { align-items: center; background: #f1f4f3; border: 0; border-radius: 8px; color: var(--muted); display: flex; padding: 7px; position: absolute; right: 16px; top: 16px; }
+.demo-modal > .icon-tile { margin-bottom: 16px; }
+.demo-modal h2 { font-size: 22px; letter-spacing: -.03em; margin: 5px 0 7px; }
+.demo-modal-intro { color: var(--muted); font-size: 11px; line-height: 1.55; margin: 0; }
+.demo-feature-list { display: grid; gap: 9px; list-style: none; margin: 19px 0; padding: 0; }
+.demo-feature-list li { align-items: center; color: #44534d; display: flex; font-size: 10px; gap: 8px; }
+.demo-feature-list svg { color: var(--green); }
+.demo-safety-note { align-items: center; background: #eef6f2; border-radius: 10px; color: var(--green); display: flex; gap: 10px; padding: 12px; }
+.demo-safety-note > span { color: var(--muted); font-size: 9px; line-height: 1.4; }
+.demo-safety-note strong { color: var(--green-dark); display: block; font-size: 10px; margin-bottom: 2px; }
+.demo-modal-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.demo-modal-actions .primary-button { margin: 0; }
+.demo-modal-actions .text-action { margin-left: auto; }
 
 /* Einheitliches Seitenraster für alle Funktionsbereiche. */
 .page-content { margin: 0 auto; max-width: 1120px; padding: 54px 28px 80px; }
@@ -156,6 +180,26 @@ textarea { resize: vertical; }
 .upload-zone strong, .upload-zone small { display: block; }
 .upload-zone strong { color: var(--ink); font-size: 13px; }
 .upload-zone small { color: var(--muted); font-size: 11px; font-weight: 500; margin-top: 3px; }
+
+.device-recognition { background: #f7faf8; border: 1px solid #dce8e2; border-radius: 14px; margin-bottom: 22px; padding: 17px; }
+.device-recognition-copy { align-items: center; display: flex; gap: 12px; }
+.device-recognition-copy > div { flex: 1; }
+.device-recognition-copy strong { display: block; font-size: 13px; }
+.device-recognition-copy p { color: var(--muted); font-size: 11px; line-height: 1.5; margin: 3px 0 0; }
+.device-image-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 14px; }
+.image-action { align-items: center; background: white; border: 1px solid #bdd0c7; border-radius: 9px; color: var(--green); cursor: pointer; display: inline-flex; font-size: 11px; font-weight: 750; gap: 7px; padding: 10px 13px; }
+.image-action:hover { background: var(--green-soft); border-color: #79a991; }
+.image-action.primary-image-action { background: var(--green); border-color: var(--green); color: white; }
+.image-action.primary-image-action:hover { background: var(--green-dark); }
+.image-action input { height: 1px; opacity: 0; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+.device-image-result { align-items: center; background: white; border: 1px solid var(--line); border-radius: 11px; display: flex; gap: 13px; margin-top: 14px; padding: 10px; }
+.device-image-result img { border-radius: 8px; height: 70px; object-fit: cover; width: 82px; }
+.device-image-result > div { min-width: 0; }
+.device-image-result strong, .device-image-result small, .device-image-result em { display: block; }
+.device-image-result strong { align-items: center; display: flex; font-size: 12px; gap: 5px; }
+.device-image-result small { color: var(--muted); font-size: 10px; line-height: 1.45; margin-top: 4px; }
+.device-image-result em { color: var(--green); font-size: 9px; font-style: normal; font-weight: 700; margin-top: 5px; text-transform: uppercase; }
+.recognition-privacy { align-items: center; color: #78857f; display: flex; font-size: 9px; gap: 6px; line-height: 1.4; margin: 12px 0 0; }
 
 .primary-button {
   align-items: center;
@@ -675,6 +719,8 @@ textarea { resize: vertical; }
   .form-grid { grid-template-columns: 1fr; }
   label.wide { grid-column: auto; }
   .form-intro { align-items: flex-start; }
+  .device-image-actions, .image-action { width: 100%; }
+  .image-action { justify-content: center; }
   .estimate-result { align-items: flex-start; gap: 15px; }
   .estimate-result strong { font-size: 19px; }
   .history-card { padding: 22px 18px; }
@@ -756,6 +802,10 @@ textarea { resize: vertical; }
   .report-recommendation-list article > em { grid-column: 2; }
   .export-info-card { align-items: flex-start; flex-wrap: wrap; }
   .export-info-card > div { min-width: calc(100% - 70px); }
+  .demo-modal { padding: 24px 18px; }
+  .demo-modal-actions { align-items: stretch; flex-direction: column; }
+  .demo-modal-actions .primary-button, .demo-modal-actions .secondary-button { justify-content: center; width: 100%; }
+  .demo-modal-actions .text-action { margin: 0; }
 }
 
 @media print {
@@ -782,4 +832,6 @@ textarea { resize: vertical; }
 @media (max-width: 380px) {
   .topbar .brand { display: none; }
   .topbar { justify-content: center; }
+  .topbar-actions { width: 100%; }
+  .topbar-actions nav { flex: 1; }
 }

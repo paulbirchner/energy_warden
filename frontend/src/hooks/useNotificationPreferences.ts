@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { NotificationPreferences } from "../types/energyWarden";
 
-const STORAGE_KEY = "energy-warden-notifications-v1";
+/** Gemeinsamer Persistenzschlüssel für Mitteilungs- und Demo-Einstellungen. */
+export const NOTIFICATION_STORAGE_KEY = "energy-warden-notifications-v1";
 
 const DEFAULTS: NotificationPreferences = {
   consumptionAlerts: true,
@@ -20,7 +21,7 @@ const DEFAULTS: NotificationPreferences = {
 /** Lädt Einstellungen und ergänzt ältere Speicherstände um neue Standardfelder. */
 function loadPreferences(): NotificationPreferences {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(NOTIFICATION_STORAGE_KEY);
     return stored ? { ...DEFAULTS, ...JSON.parse(stored) } : DEFAULTS;
   } catch {
     return DEFAULTS;
@@ -35,7 +36,7 @@ export function useNotificationPreferences() {
   function update(patch: Partial<NotificationPreferences>) {
     const next = { ...preferences, ...patch };
     setPreferences(next);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    localStorage.setItem(NOTIFICATION_STORAGE_KEY, JSON.stringify(next));
   }
 
   return {

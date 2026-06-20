@@ -7,6 +7,7 @@ import AnalysisPage from "./pages/AnalysisPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
 import ReportsPage from "./pages/ReportsPage";
+import { DemoDataControls } from "./components/DemoDataControls";
 
 type Page = "dashboard" | "consumption" | "tariffs" | "analysis" | "recommendations" | "notifications" | "reports";
 
@@ -16,7 +17,7 @@ type Page = "dashboard" | "consumption" | "tariffs" | "analysis" | "recommendati
  * die globale Kopfzeile sowie den jeweils ausgewählten Funktionsbereich.
  */
 export default function App() {
-  const [page, setPage] = useState<Page>("reports");
+  const [page, setPage] = useState<Page>("dashboard");
 
   return (
     <div className="app-shell">
@@ -29,7 +30,8 @@ export default function App() {
           </span>
         </button>
 
-        <nav aria-label="Hauptnavigation">
+        <div className="topbar-actions">
+          <nav aria-label="Hauptnavigation">
           <button
             className={page === "dashboard" ? "nav-item active" : "nav-item"}
             type="button"
@@ -79,7 +81,9 @@ export default function App() {
           >
             Berichte
           </button>
-        </nav>
+          </nav>
+          <DemoDataControls />
+        </div>
       </header>
 
       {page === "dashboard" && <DashboardPage onNavigate={setPage} />}

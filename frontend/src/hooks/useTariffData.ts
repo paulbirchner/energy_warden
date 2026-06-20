@@ -1,13 +1,14 @@
 import { useState } from "react";
 import type { Tariff, TariffData, UtilityType } from "../types/energyWarden";
 
-const STORAGE_KEY = "energy-warden-tariffs-v1";
+/** Gemeinsamer Persistenzschlüssel für Tarife und Demo-Daten. */
+export const TARIFF_STORAGE_KEY = "energy-warden-tariffs-v1";
 const EMPTY_DATA: TariffData = { tariffs: [] };
 
 /** Liest gespeicherte Tarife; beschädigte Daten führen zu einem leeren Zustand. */
 function loadData(): TariffData {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(TARIFF_STORAGE_KEY);
     return stored ? { ...EMPTY_DATA, ...JSON.parse(stored) } : EMPTY_DATA;
   } catch {
     return EMPTY_DATA;
@@ -22,7 +23,7 @@ export function useTariffData() {
   function update(tariffs: Tariff[]) {
     const next = { tariffs };
     setData(next);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    localStorage.setItem(TARIFF_STORAGE_KEY, JSON.stringify(next));
   }
 
   /** Stellt sicher, dass je Versorgungsart höchstens ein Tarif aktiv ist. */
