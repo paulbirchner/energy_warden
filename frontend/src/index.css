@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+/* Globale Basis: Schrift, Seitenhintergrund und browserweite Textdarstellung. */
+html { background: #f3f7f5; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: #18231f;
+  background:
+    radial-gradient(circle at 90% 8%, rgba(157, 205, 180, .17), transparent 25rem),
+    #f3f7f5;
+  font-family: "DM Sans", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: #bfe2d2; color: #104d38; }
