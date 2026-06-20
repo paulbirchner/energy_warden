@@ -6,7 +6,8 @@ import type {
   MeterReading,
 } from "../types/energyWarden";
 
-const STORAGE_KEY = "energy-warden-consumption-v1";
+/** Öffentlicher Schlüssel, damit Import-/Demo-Werkzeuge denselben Speicher nutzen. */
+export const CONSUMPTION_STORAGE_KEY = "energy-warden-consumption-v1";
 const EMPTY_DATA: ConsumptionData = {
   meterReadings: [],
   invoices: [],
@@ -16,7 +17,7 @@ const EMPTY_DATA: ConsumptionData = {
 /** Liest Verbrauchsdaten fehlertolerant aus dem Browser-Speicher. */
 function loadData(): ConsumptionData {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(CONSUMPTION_STORAGE_KEY);
     return stored ? { ...EMPTY_DATA, ...JSON.parse(stored) } : EMPTY_DATA;
   } catch {
     return EMPTY_DATA;
@@ -33,7 +34,7 @@ export function useConsumptionData() {
   /** Persistiert einen vollständig aktualisierten Verbrauchsdatenstand. */
   function update(next: ConsumptionData) {
     setData(next);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    localStorage.setItem(CONSUMPTION_STORAGE_KEY, JSON.stringify(next));
   }
 
   return {

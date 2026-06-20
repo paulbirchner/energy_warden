@@ -1,13 +1,14 @@
 import { useState } from "react";
 import type { RecommendationProgress } from "../types/energyWarden";
 
-const STORAGE_KEY = "energy-warden-recommendation-progress-v1";
+/** Gemeinsamer Persistenzschlüssel für Maßnahmenfortschritt und Demo-Daten. */
+export const RECOMMENDATION_PROGRESS_STORAGE_KEY = "energy-warden-recommendation-progress-v1";
 const EMPTY_PROGRESS: RecommendationProgress = { completedIds: [], dismissedIds: [] };
 
 /** Lädt den Bearbeitungsstand der Empfehlungen aus localStorage. */
 function loadProgress(): RecommendationProgress {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(RECOMMENDATION_PROGRESS_STORAGE_KEY);
     return stored ? { ...EMPTY_PROGRESS, ...JSON.parse(stored) } : EMPTY_PROGRESS;
   } catch {
     return EMPTY_PROGRESS;
@@ -21,7 +22,7 @@ export function useRecommendationProgress() {
   /** Synchronisiert den neuen Fortschritt mit State und Browser-Speicher. */
   function update(next: RecommendationProgress) {
     setProgress(next);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    localStorage.setItem(RECOMMENDATION_PROGRESS_STORAGE_KEY, JSON.stringify(next));
   }
 
   return {

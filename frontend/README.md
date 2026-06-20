@@ -141,6 +141,23 @@ die lokale Vorschauadresse im Terminal an.
 - **Hinweise:** Erinnerungen, Verbrauchswarnungen und Browser-Benachrichtigungen
 - **Berichte:** Monatsberichte, CSV-Export und PDF-Ausgabe über den Druckdialog
 
+## Demo-Modus für den PoC
+
+Über den Button **Demo** rechts in der Hauptnavigation kann ein vollständiger
+Beispielhaushalt geladen werden. Der Datensatz wird relativ zum aktuellen Monat
+erzeugt und enthält:
+
+- zwölf Monate Verbrauchsdaten mit einer erkennbaren Verbrauchsspitze
+- eine Stromrechnung und fünf typische Haushaltsgeräte
+- einen aktuellen sowie mehrere alternative Tarife
+- offene und bereits umgesetzte Einsparmaßnahmen
+- Daten für Warnungen, Analysen, Dashboard und Monatsbericht
+
+Falls bereits eigene Eingaben vorhanden sind, werden diese vor Aktivierung des
+Demo-Modus automatisch im Browser gesichert. Über **Originaldaten
+wiederherstellen** wird der Demo-Datensatz entfernt und der vorherige Stand
+zurückgespielt.
+
 ## Lokale Datenspeicherung
 
 Bis zur Anbindung der entsprechenden Backend-Endpunkte werden Fachdaten im

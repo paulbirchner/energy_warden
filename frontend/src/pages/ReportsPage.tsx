@@ -20,11 +20,13 @@ const currentMonthKey = new Date().toISOString().slice(0, 7);
 
 /** Erstellt die auswählbare Monatsberichtseite aus allen lokalen Fachdaten. */
 export default function ReportsPage() {
-  const [selectedMonth, setSelectedMonth] = useState(currentMonthKey);
   const consumption = useConsumptionData();
   const tariffs = useTariffData();
   const progress = useRecommendationProgress();
   const series = buildMonthlySeries(consumption.data);
+  const [selectedMonth, setSelectedMonth] = useState(
+    () => series.at(-1)?.key ?? currentMonthKey,
+  );
   const recommendations = generateLocalRecommendations(consumption.data, tariffs.data.tariffs);
   const months = getReportMonths(series);
   const report = buildMonthlyReport(
