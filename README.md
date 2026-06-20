@@ -107,3 +107,46 @@ im Code berechnet (nicht vom Modell).
   }
 ]
 ```
+
+### `GET /appliances`
+
+Alle Geräte des Demo-Haushalts.
+
+**200 OK**
+```json
+[
+  { "id": 1, "name": "Washing machine", "room_id": 3, "watt": 2000, "duration_min": 90 }
+]
+```
+
+### `POST /appliances/estimate-from-photo`
+
+Schätzt aus einem Foto, um welches Gerät es sich handelt und wie sein
+Stromprofil aussieht (Sprachmodell mit Bilderkennung), **speichert das Gerät in
+die `appliances`-Tabelle** und gibt die Schätzung samt neuer `id` zurück. Das
+gespeicherte Gerät fließt beim nächsten `POST /suggestions/generate`
+automatisch in die Empfehlungen ein.
+
+Request: `multipart/form-data` mit dem Feld `image` (JPG, PNG, WEBP oder GIF).
+Macht einen echten, kostenpflichtigen Modell-Aufruf, benötigt den
+`ANTHROPIC_API_KEY`.
+
+```bash
+curl -X POST http://127.0.0.1:8000/appliances/estimate-from-photo \
+  -F "image=@waschmaschine.jpg"
+```
+
+**200 OK**
+```json
+{
+  "id": 6,
+  "name": "Washing machine",
+  "estimated_watt": 2000,
+  "typical_duration_min": 90,
+  "confidence": "high",
+  "note": "Front-loading washing machine erkannt; Leistung je nach Programm."
+}
+```
+
+`confidence` ist einer von `low`, `medium`, `high`. Bei ungültigem Dateityp
+oder leerer Datei kommt `400`.

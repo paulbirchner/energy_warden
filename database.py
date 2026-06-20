@@ -123,6 +123,18 @@ def get_weather_data(start = None, end = None):
 
     return res
 
+def insert_appliance(name, watt, duration_min, room_id = None):
+    """Insert a single appliance and return its new id. room_id is optional."""
+    with connect() as con:
+        cur = con.cursor()
+
+        cur.execute(
+            '''INSERT INTO appliances (name, room_id, watt, duration_min)
+               VALUES (?, ?, ?, ?)''',
+            (name, room_id, watt, duration_min),
+        )
+        return cur.lastrowid
+
 def get_appliances(room_id = None):
     with connect() as con:
         con.row_factory = sqlite3.Row
