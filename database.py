@@ -96,7 +96,14 @@ def insert_prices(rows):
     with connect() as con:
         cur = con.cursor()
 
-        cur.executemany('''INSERT OR IGNORE INTO price_data (timestamp, price_eur_mwh) VALUES (?, ?)''', rows)
+        cur.executemany(
+            '''INSERT INTO price_data (timestamp, price_eur_mwh, source)
+               VALUES (?, ?, 'awattar_de')
+               ON CONFLICT(timestamp) DO UPDATE SET
+                   price_eur_mwh = excluded.price_eur_mwh,
+                   source = excluded.source''',
+            rows,
+        )
 
 # --- weather data ---
 

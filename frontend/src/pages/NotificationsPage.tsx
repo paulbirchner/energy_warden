@@ -5,6 +5,7 @@ import { useConsumptionData } from "../hooks/useConsumptionData";
 import { useNotificationPreferences } from "../hooks/useNotificationPreferences";
 import type { NotificationPreferences } from "../types/energyWarden";
 import { buildMonthlySeries } from "../utils/analysisUtils";
+import { estimatedHouseholdPriceCentKwh } from "../utils/priceUtils";
 
 type NoticeKind = "warning" | "reminder" | "tip" | "info";
 type Notice = {
@@ -192,11 +193,11 @@ function buildNotices(
   }
 
   if (preferences.realtimeTips && priceStatus === "ready" && marketPrice !== null) {
-    const cent = marketPrice / 10;
+    const cent = estimatedHouseholdPriceCentKwh(marketPrice);
     if (cent >= preferences.highPriceThresholdCent) {
-      notices.push({ id: `price-high-${Math.round(cent)}`, kind: "tip", title: "Strompreis aktuell erhöht", text: `Mit ${cent.toFixed(2).replace(".", ",")} ct/kWh liegt der Börsenpreis über deinem Schwellwert. Verschiebbare Geräte besser später nutzen.`, meta: "Live-Preishinweis" });
+      notices.push({ id: `price-high-${Math.round(cent)}`, kind: "tip", title: "Strompreis aktuell erhöht", text: `Mit geschätzt ${cent.toFixed(2).replace(".", ",")} ct/kWh liegt der variable Gesamtpreis über deinem Schwellwert. Verschiebbare Geräte besser später nutzen.`, meta: "Live-Preishinweis" });
     } else if (cent <= preferences.lowPriceThresholdCent) {
-      notices.push({ id: `price-low-${Math.round(cent)}`, kind: "tip", title: "Günstiges Zeitfenster", text: `Der aktuelle Börsenpreis liegt bei ${cent.toFixed(2).replace(".", ",")} ct/kWh. Ein guter Zeitpunkt für verschiebbare Verbraucher.`, meta: "Live-Preishinweis" });
+      notices.push({ id: `price-low-${Math.round(cent)}`, kind: "tip", title: "Günstiges Zeitfenster", text: `Der variable Gesamtpreis liegt geschätzt bei ${cent.toFixed(2).replace(".", ",")} ct/kWh. Ein guter Zeitpunkt für verschiebbare Verbraucher.`, meta: "Live-Preishinweis" });
     }
   }
 

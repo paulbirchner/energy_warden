@@ -26,6 +26,23 @@ export type Suggestion = {
   appliance_name: string;
 };
 
+export type BackendAppliance = {
+  id: number;
+  name: string;
+  room_id: number | null;
+  watt: number;
+  duration_min: number;
+};
+
+export type AppliancePhotoEstimate = {
+  id: number;
+  name: string;
+  estimated_watt: number;
+  typical_duration_min: number;
+  confidence: "low" | "medium" | "high";
+  note: string;
+};
+
 // Lokal erfasste Verbrauchsdaten (FA-05 bis FA-08).
 export type MeterReading = {
   id: string;
@@ -66,12 +83,9 @@ export type ConsumptionData = {
   applianceEstimates: ApplianceEstimate[];
 };
 
-// Tarif- und Kostendaten (FA-09 bis FA-12).
-export type UtilityType = "electricity" | "water";
-
+// Stromtarif- und Kostendaten (FA-09 bis FA-12).
 export type Tariff = {
   id: string;
-  utilityType: UtilityType;
   provider: string;
   name: string;
   basePriceMonthly: number;
@@ -123,4 +137,52 @@ export type LocalRecommendation = {
 export type RecommendationProgress = {
   completedIds: string[];
   dismissedIds: string[];
+};
+
+export type PersonalizedRecommendationProfile = {
+  meterReadings: Array<{ readingDate: string; readingKwh: number }>;
+  invoices: Array<{
+    billingStart: string;
+    billingEnd: string;
+    consumptionKwh: number;
+    totalAmountEur: number;
+  }>;
+  appliances: Array<{
+    applianceName: string;
+    powerWatts: number;
+    hoursPerDay: number;
+    daysPerWeek: number;
+    annualConsumptionKwh: number;
+    annualCostEur: number;
+  }>;
+  tariffs: Array<{
+    provider: string;
+    name: string;
+    basePriceMonthly: number;
+    unitPrice: number;
+    isCurrent: boolean;
+  }>;
+  calculatedRecommendations: Array<{
+    category: RecommendationCategory;
+    title: string;
+    description: string;
+    annualSavingsKwh: number;
+    annualSavingsEur: number;
+    basedOn: string;
+  }>;
+};
+
+export type PersonalizedAiRecommendation = {
+  category: RecommendationCategory;
+  priority: RecommendationPriority;
+  title: string;
+  description: string;
+  reasoning: string;
+  steps: string[];
+  basedOn: string;
+};
+
+export type PersonalizedRecommendationResponse = {
+  summary: string;
+  recommendations: PersonalizedAiRecommendation[];
 };

@@ -1,7 +1,8 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { estimateApplianceFromPhoto } from "../api/energyWardenApi";
 import { Icon } from "../components/Icon";
 import { useConsumptionData } from "../hooks/useConsumptionData";
-import type { ConsumptionData } from "../types/energyWarden";
+import type { AppliancePhotoEstimate, ConsumptionData } from "../types/energyWarden";
 
 type Tab = "meter" | "invoice" | "device";
 
@@ -189,10 +190,47 @@ function DeviceForm({ onSave }: { onSave: (value: ConsumptionData["applianceEsti
   const [days, setDays] = useState("7");
   const [price, setPrice] = useState("0.32");
   const [saved, setSaved] = useState(false);
+  const [recognition, setRecognition] = useState<AppliancePhotoEstimate | null>(null);
+  const [recognitionStatus, setRecognitionStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [recognitionError, setRecognitionError] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const estimate = useMemo(() => {
     const annualKwh = Number(watts) / 1000 * Number(hours) * Number(days) * 52;
     return { annualKwh: Number.isFinite(annualKwh) ? annualKwh : 0, cost: annualKwh * Number(price) };
   }, [watts, hours, days, price]);
+
+  useEffect(() => () => {
+    if (imageUrl) URL.revokeObjectURL(imageUrl);
+  }, [imageUrl]);
+
+  /** Sendet ein Foto an die vorhandene Backend-Erkennung und übernimmt die Schätzung ins Formular. */
+  async function recognizeImage(file?: File) {
+    if (!file) return;
+
+    const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowed.includes(file.type)) {
+      setRecognitionError("Bitte verwende JPG, PNG, WEBP oder GIF.");
+      setRecognitionStatus("error");
+      return;
+    }
+
+    setImageUrl(URL.createObjectURL(file));
+    setRecognition(null);
+    setRecognitionError("");
+    setRecognitionStatus("loading");
+
+    try {
+      const result = await estimateApplianceFromPhoto(file);
+      setRecognition(result);
+      setName(result.name);
+      setWatts(String(result.estimated_watt));
+      setHours(String(Math.max(result.typical_duration_min / 60, 0.1)));
+      setRecognitionStatus("idle");
+    } catch (error) {
+      setRecognitionError(error instanceof Error ? error.message : "Das Gerät konnte nicht erkannt werden.");
+      setRecognitionStatus("error");
+    }
+  }
 
   /** Übernimmt die aktuelle Hochrechnung dauerhaft in die Verbrauchsdaten. */
   function submit(event: FormEvent) {
@@ -204,6 +242,38 @@ function DeviceForm({ onSave }: { onSave: (value: ConsumptionData["applianceEsti
   return (
     <form onSubmit={submit}>
       <FormIntro icon="device" title="Geräteverbrauch schätzen">Berechne den Jahresverbrauch eines Geräts anhand seiner typischen Nutzung.</FormIntro>
+      <section className="device-recognition" aria-label="Gerät per Foto erkennen">
+        <div className="device-recognition-copy">
+          <span className="icon-tile"><Icon name="device" /></span>
+          <div>
+            <strong>Gerät automatisch erkennen</strong>
+            <p>Fotografiere das Gerät oder wähle ein Bild aus. Leistung und typische Nutzungsdauer werden vom Backend geschätzt.</p>
+          </div>
+        </div>
+        <div className="device-image-actions">
+          <label className="image-action primary-image-action">
+            <Icon name="device" size={17} /> Foto aufnehmen
+            <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" capture="environment" onChange={(event) => { void recognizeImage(event.target.files?.[0]); event.target.value = ""; }} />
+          </label>
+          <label className="image-action">
+            <Icon name="upload" size={17} /> Bild auswählen
+            <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={(event) => { void recognizeImage(event.target.files?.[0]); event.target.value = ""; }} />
+          </label>
+        </div>
+        {recognitionStatus === "loading" && <p className="recognition-privacy"><Icon name="refresh" size={14} /> Bild wird analysiert …</p>}
+        {recognitionStatus === "error" && <p className="form-error">{recognitionError}</p>}
+        {recognition && (
+          <div className="device-image-result">
+            {imageUrl && <img src={imageUrl} alt="Zur Erkennung ausgewähltes Gerät" />}
+            <div>
+              <strong><Icon name="check" size={15} /> {recognition.name}</strong>
+              <small>{recognition.estimated_watt} W · typische Laufzeit {recognition.typical_duration_min} Minuten<br />{recognition.note}</small>
+              <em>Konfidenz: {recognition.confidence === "high" ? "hoch" : recognition.confidence === "medium" ? "mittel" : "niedrig"}</em>
+            </div>
+          </div>
+        )}
+        <p className="recognition-privacy"><Icon name="alert" size={13} /> Das Bild wird zur Analyse an das Backend übertragen; das Backend speichert nur die erkannten Gerätedaten.</p>
+      </section>
       <div className="form-grid">
         <label className="wide">Gerät<input required value={name} onChange={(e) => setName(e.target.value)} placeholder="z. B. Fernseher, Waschmaschine" /></label>
         <label>Leistung<div className="input-unit"><input required min="1" step="1" type="number" value={watts} onChange={(e) => setWatts(e.target.value)} /><span>W</span></div></label>

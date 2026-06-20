@@ -16,7 +16,7 @@ function priorityFor(savingsEur: number, savingsKwh: number): RecommendationPrio
 
 /** Bestimmt den geeignetsten Strompreis: aktiver Tarif, Gerätemittel oder Fallback. */
 function electricityPrice(data: ConsumptionData, tariffs: Tariff[]) {
-  const current = tariffs.find((tariff) => tariff.utilityType === "electricity" && tariff.isCurrent);
+  const current = tariffs.find((tariff) => tariff.isCurrent);
   if (current) return current.unitPrice;
   const devicePrices = data.applianceEstimates.map((item) => item.pricePerKwh).filter((price) => price > 0);
   return devicePrices.length > 0
@@ -139,10 +139,10 @@ export function generateLocalRecommendations(data: ConsumptionData, tariffs: Tar
     }
   }
 
-  const currentTariff = tariffs.find((tariff) => tariff.utilityType === "electricity" && tariff.isCurrent);
+  const currentTariff = tariffs.find((tariff) => tariff.isCurrent);
   if (currentTariff && annual > 0) {
     const alternatives = tariffs
-      .filter((tariff) => tariff.utilityType === "electricity" && tariff.id !== currentTariff.id)
+      .filter((tariff) => tariff.id !== currentTariff.id)
       .map((tariff) => ({ tariff, cost: tariffAnnualCost(tariff, annual) }))
       .sort((a, b) => a.cost - b.cost);
     const best = alternatives[0];

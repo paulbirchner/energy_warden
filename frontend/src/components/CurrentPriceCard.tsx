@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getCurrentPrice } from "../api/energyWardenApi";
-import { formatCentKwh } from "../utils/priceUtils";
+import { formatCentKwh, formatEstimatedHouseholdPrice } from "../utils/priceUtils";
 
 /** Lädt und zeigt den aktuellen Strompreis inklusive Lade- und Fehlerzustand. */
 export function CurrentPriceCard() {
@@ -44,9 +44,10 @@ export function CurrentPriceCard() {
 
   return (
     <section>
-      <h2>Aktueller Strompreis</h2>
+      <h2>Geschätzter Haushaltsstrompreis</h2>
       <p>
-        <strong>{formatCentKwh(price)}</strong>
+        <strong>{formatEstimatedHouseholdPrice(price)}</strong><br />
+        <small>Börsenanteil: {formatCentKwh(price)} · ohne Grundpreis</small>
       </p>
     </section>
   );

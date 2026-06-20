@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from anthropic import AnthropicError
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,6 +7,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import init_db, get_prices, get_current_price, get_suggestions, get_appliances
 from suggestions import generate_suggestions
 from appliances import estimate_and_store_appliance
+from ai_recommendations import (
+    AiConfigurationError,
+    PersonalizedRecommendationRequest,
+    PersonalizedRecommendationResponse,
+    generate_personalized_recommendations,
+)
 
 load_dotenv()
 
@@ -52,6 +59,26 @@ async def suggestions_generate():
 @app.get("/suggestions")
 async def suggestions():
     return [dict(row) for row in get_suggestions()]
+
+@app.post(
+    "/recommendations/personalized",
+    response_model=PersonalizedRecommendationResponse,
+)
+async def recommendations_personalized(profile: PersonalizedRecommendationRequest):
+    try:
+        return await generate_personalized_recommendations(profile)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    except AnthropicError as error:
+        raise HTTPException(
+            status_code=503,
+            detail="KI-Dienst nicht verfügbar. Prüfe ANTHROPIC_API_KEY und Netzwerk.",
+        ) from error
+    except AiConfigurationError as error:
+        raise HTTPException(
+            status_code=503,
+            detail="KI-Dienst nicht verfügbar. ANTHROPIC_API_KEY fehlt in .env.",
+        ) from error
 
 @app.get("/appliances")
 async def appliances():

@@ -7,6 +7,7 @@ import { useTariffData } from "../hooks/useTariffData";
 import type { ApplianceEstimate, LocalRecommendation, Tariff } from "../types/energyWarden";
 import { buildMonthlySeries, consumptionChange } from "../utils/analysisUtils";
 import { generateLocalRecommendations } from "../utils/recommendationUtils";
+import { estimatedHouseholdPriceCentKwh, formatCentKwh } from "../utils/priceUtils";
 
 type DashboardDestination = "consumption" | "tariffs" | "analysis" | "recommendations";
 type DashboardProps = { onNavigate: (page: DashboardDestination) => void };
@@ -28,9 +29,7 @@ export default function DashboardPage({ onNavigate }: DashboardProps) {
     () => generateLocalRecommendations(consumptionStore.data, tariffStore.data.tariffs),
     [consumptionStore.data, tariffStore.data.tariffs],
   );
-  const currentTariff = tariffStore.data.tariffs.find(
-    (tariff) => tariff.utilityType === "electricity" && tariff.isCurrent,
-  );
+  const currentTariff = tariffStore.data.tariffs.find((tariff) => tariff.isCurrent);
   const currentMonth = series.at(-1)?.consumption ?? 0;
   const previousChange = consumptionChange(series);
   const monthlyCost = currentTariff
@@ -146,8 +145,8 @@ function LivePriceWidget() {
   useEffect(() => {
     getCurrentPrice().then((value) => { setPrice(value); setStatus("ready"); }).catch(() => setStatus("error"));
   }, []);
-  const cent = price === null ? null : price / 10;
-  return <section className="dashboard-live-price"><div><span className="live-dot" /><p>Strompreis jetzt</p></div>{status === "loading" && <strong>Wird geladen …</strong>}{status === "error" && <><strong>Nicht erreichbar</strong><small>Backend-Preisschnittstelle offline</small></>}{status === "ready" && cent !== null && <><strong>{cent.toFixed(2).replace(".", ",")} ct/kWh</strong><small>{cent <= 12 ? "Günstiges Zeitfenster" : cent >= 25 ? "Verbrauch besser verschieben" : "Preis im normalen Bereich"}</small></>}</section>;
+  const cent = price === null ? null : estimatedHouseholdPriceCentKwh(price);
+  return <section className="dashboard-live-price"><div><span className="live-dot" /><p>Geschätzter Gesamtpreis jetzt</p></div>{status === "loading" && <strong>Wird geladen …</strong>}{status === "error" && <><strong>Nicht erreichbar</strong><small>Backend-Preisschnittstelle offline</small></>}{status === "ready" && cent !== null && price !== null && <><strong>{cent.toFixed(2).replace(".", ",")} ct/kWh</strong><small>Börsenanteil {formatCentKwh(price)} · ohne Grundpreis</small></>}</section>;
 }
 
 /** Kurze Vorschau einer noch offenen persönlichen Maßnahme. */

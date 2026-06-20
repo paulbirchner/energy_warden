@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getPriceData } from "../api/energyWardenApi";
 import type { PriceData } from "../types/energyWarden";
-import { formatCentKwh } from "../utils/priceUtils";
+import { formatCentKwh, formatEstimatedHouseholdPrice } from "../utils/priceUtils";
 import { formatHourFromUnix } from "../utils/timeUtils";
 
 /** Zeigt die stündlichen Preise des Tages als einfache Liste. */
@@ -55,7 +55,8 @@ export function PriceList() {
         {prices.map((price) => (
           <li key={price.id}>
             {formatHourFromUnix(price.timestamp)}:{" "}
-            <strong>{formatCentKwh(price.price_eur_mwh)}</strong>
+            <strong>{formatEstimatedHouseholdPrice(price.price_eur_mwh)}</strong>{" "}
+            <small>(Börse {formatCentKwh(price.price_eur_mwh)})</small>
           </li>
         ))}
       </ul>

@@ -54,7 +54,7 @@ export function buildMonthlyReport(
   const previousChange = previous && previous.consumption > 0
     ? (consumptionKwh - previous.consumption) / previous.consumption * 100
     : null;
-  const tariff = tariffs.find((entry) => entry.utilityType === "electricity" && entry.isCurrent);
+  const tariff = tariffs.find((entry) => entry.isCurrent);
   const baseCostEur = tariff ? tariff.basePriceMonthly : 0;
   const consumptionCostEur = tariff ? tariff.unitPrice * consumptionKwh : 0;
   const completed = recommendations.filter((entry) => completedIds.includes(entry.id));
@@ -100,7 +100,7 @@ function csvValue(value: string | number) {
 
 /** Exportiert alle Monatswerte und ihre Tarifkosten als deutschen CSV-Inhalt. */
 export function createConsumptionCsv(data: ConsumptionData, tariffs: Tariff[]) {
-  const tariff = tariffs.find((entry) => entry.utilityType === "electricity" && entry.isCurrent);
+  const tariff = tariffs.find((entry) => entry.isCurrent);
   const rows = buildMonthlySeries(data).map((point) => {
     const baseCost = tariff?.basePriceMonthly ?? 0;
     const consumptionCost = tariff ? tariff.unitPrice * point.consumption : 0;

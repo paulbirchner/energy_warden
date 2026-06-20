@@ -131,7 +131,6 @@ export function createDemoData(): DemoDataBundle {
       tariffs: [
         {
           id: "demo-tariff-current",
-          utilityType: "electricity",
           provider: "Stadtwerke Regensburg",
           name: "Regensburg Komfort",
           basePriceMonthly: 14.5,
@@ -142,7 +141,6 @@ export function createDemoData(): DemoDataBundle {
         },
         {
           id: "demo-tariff-alternative",
-          utilityType: "electricity",
           provider: "Grünstrom Bayern",
           name: "ÖkoDirekt 24",
           basePriceMonthly: 11.9,
@@ -153,24 +151,12 @@ export function createDemoData(): DemoDataBundle {
         },
         {
           id: "demo-tariff-flex",
-          utilityType: "electricity",
           provider: "Energy Flex",
           name: "Flex Zuhause",
           basePriceMonthly: 9.9,
           unitPrice: 0.335,
           validFrom: dateInput(relativeMonth(-1, 1)),
           isCurrent: false,
-          createdAt: now,
-        },
-        {
-          id: "demo-tariff-water",
-          utilityType: "water",
-          provider: "REWAG",
-          name: "Trinkwasser Haushalt",
-          basePriceMonthly: 6.8,
-          unitPrice: 2.45,
-          validFrom: dateInput(relativeMonth(-10, 1)),
-          isCurrent: true,
           createdAt: now,
         },
       ],

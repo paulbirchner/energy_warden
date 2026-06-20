@@ -135,9 +135,11 @@ die lokale Vorschauadresse im Terminal an.
 
 - **Dashboard:** Verbrauch, Kosten, Strompreis, Hotspots und Einsparfortschritt
 - **Verbrauch:** Zählerstände, Rechnungen, Dokumentmetadaten und Geräteschätzungen
-- **Tarife & Kosten:** Strom-/Wassertarife, Kostenberechnung und Tarifvergleich
+- **Tarife & Kosten:** Stromtarife, Kostenberechnung sowie ein dynamischer
+  Tagesvergleich mit Live-Preisen und verschiebbaren Geräten
 - **Analyse:** Monatsentwicklung, Haushaltsvergleich, Auffälligkeiten und Prognosen
-- **Empfehlungen:** personalisierte Maßnahmen mit berechnetem Einsparpotenzial
+- **Empfehlungen:** lokal berechnete Maßnahmen und eine auf Wunsch gestartete
+  KI-Analyse des reduzierten Energieprofils
 - **Hinweise:** Erinnerungen, Verbrauchswarnungen und Browser-Benachrichtigungen
 - **Berichte:** Monatsberichte, CSV-Export und PDF-Ausgabe über den Druckdialog
 
@@ -170,7 +172,7 @@ Folgende Daten werden lokal gespeichert:
 - Verbrauchsdaten und Zählerstände
 - Rechnungswerte und Dateimetadaten
 - Geräteschätzungen
-- Strom- und Wassertarife
+- Stromtarife
 - Benachrichtigungseinstellungen
 - Bearbeitungsstand von Empfehlungen
 

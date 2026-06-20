@@ -28,8 +28,23 @@ und `sync_weather()` aus `sync.py` müssen vor der Demo einmal manuell laufen.
 
 ## API
 
-Zeitstempel sind überall **Unix-Sekunden**. Preise sind in **€/MWh**
-(€/kWh = Wert / 1000).
+Zeitstempel sind überall **Unix-Sekunden**. Die Börsenpreise stammen aus der
+deutschen aWATTar-API und werden in **€/MWh** gespeichert
+(ct/kWh = Wert / 10). Netzentgelte, Steuern, Abgaben, Vertriebskosten und
+Grundpreise sind darin nicht enthalten.
+
+Das Frontend zeigt zusätzlich einen **geschätzten variablen Haushaltsstrompreis**:
+Börsenpreis plus pauschal 20 ct/kWh für Netzentgelte, Steuern, Abgaben und
+Vertrieb. Der Zuschlag lässt sich beim Frontend-Start über
+`VITE_PRICE_SURCHARGE_CENT_KWH` an den eigenen dynamischen Tarif anpassen. Ein
+monatlicher Grundpreis bleibt außerhalb dieser Schätzung.
+
+Im Tarifvergleich simuliert das Frontend außerdem einen repräsentativen Tag.
+Dafür kombiniert es den hochgerechneten Jahresverbrauch mit einem synthetischen
+Stundenprofil, den heutigen Preisen und flexibel verschiebbaren Geräten. Der
+dynamische Grundpreis ist über `VITE_DYNAMIC_BASE_PRICE_MONTHLY` konfigurierbar
+(Standard: 9,90 Euro/Monat). Fehlende Preisstunden werden für den PoC sichtbar
+gekennzeichnet und mit dem Mittelwert der vorhandenen Stunden ergänzt.
 
 ### `GET /health`
 
@@ -150,3 +165,32 @@ curl -X POST http://127.0.0.1:8000/appliances/estimate-from-photo \
 
 `confidence` ist einer von `low`, `medium`, `high`. Bei ungültigem Dateityp
 oder leerer Datei kommt `400`.
+
+### `POST /recommendations/personalized`
+
+Erstellt per KI eine qualitative, priorisierte Beratung aus dem vom Frontend
+reduzierten Haushaltsprofil. Übertragen werden Verbrauchswerte, Rechnungs-
+summen, Geräteschätzungen, Tarife und bereits im Code berechnete Maßnahmen –
+keine Zählernummern, Notizen oder Dokumente. Die Antwort enthält eine persönliche
+Einordnung sowie drei bis fünf Empfehlungen mit Begründung und konkreten
+Schritten.
+
+Der Aufruf benötigt `ANTHROPIC_API_KEY` in `.env` und ist kostenpflichtig. Als
+Vorlage kann `.env.example` nach `.env` kopiert und anschließend der Schlüssel
+eingetragen werden.
+Copy-Item .env.example .env
+
+```json
+{
+  "appliances": [
+    {
+      "applianceName": "Wärmepumpe",
+      "powerWatts": 2800,
+      "hoursPerDay": 2,
+      "daysPerWeek": 7,
+      "annualConsumptionKwh": 2038.4,
+      "annualCostEur": 733.82
+    }
+  ]
+}
+```

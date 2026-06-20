@@ -37,9 +37,7 @@ export default function AnalysisPage() {
   const monthlyAverage = annual / 12;
   const change = consumptionChange(series);
   const anomaly = findAnomaly(series);
-  const currentTariff = tariffStore.data.tariffs.find(
-    (tariff) => tariff.utilityType === "electricity" && tariff.isCurrent,
-  );
+  const currentTariff = tariffStore.data.tariffs.find((tariff) => tariff.isCurrent);
   const forecast = buildForecast(series, currentTariff);
   const forecastCost = currentTariff ? tariffAnnualCost(currentTariff, annual) : 0;
 
@@ -171,7 +169,7 @@ function Benchmark({ annual, householdSize, onHouseholdSize }: { annual: number;
         <div className="benchmark-scale"><span style={{ left: `${marker}%` }} /><i /></div>
         <p className={difference > 0 ? "benchmark-result above" : "benchmark-result"}>{difference > 0 ? `${decimal.format(Math.abs(difference))} % über` : `${decimal.format(Math.abs(difference))} % unter`} dem Orientierungswert.</p>
       </>}
-      <small className="benchmark-note">Unverbindlicher Richtwert; Warmwasserbereitung und Gebäudeart können den Vergleich deutlich verändern.</small>
+      <small className="benchmark-note">Unverbindlicher Richtwert; elektrische Heizsysteme und Gebäudeart können den Vergleich deutlich verändern.</small>
     </div>
   );
 }
