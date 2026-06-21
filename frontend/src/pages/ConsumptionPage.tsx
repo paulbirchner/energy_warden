@@ -17,7 +17,7 @@ function id() {
 
 /** Hauptseite für Zählerstände, Rechnungen und gerätebezogene Schätzungen. */
 export default function ConsumptionPage() {
-  const [tab, setTab] = useState<Tab>("meter");
+  const [tab, setTab] = useState<Tab>("device");
   const store = useConsumptionData();
   const totalEstimated = store.data.applianceEstimates.reduce(
     (sum, item) => sum + item.annualConsumptionKwh,
@@ -46,9 +46,9 @@ export default function ConsumptionPage() {
 
       <div className="workspace-card">
         <div className="tabs" role="tablist" aria-label="Consumption entry type">
+          <TabButton active={tab === "device"} icon="device" label="Appliance estimate" onClick={() => setTab("device")} />
           <TabButton active={tab === "meter"} icon="meter" label="Meter reading" onClick={() => setTab("meter")} />
           <TabButton active={tab === "invoice"} icon="invoice" label="Invoice" onClick={() => setTab("invoice")} />
-          <TabButton active={tab === "device"} icon="device" label="Appliance estimate" onClick={() => setTab("device")} />
         </div>
 
         <div className="tab-content">
