@@ -72,12 +72,12 @@ async def recommendations_personalized(profile: PersonalizedRecommendationReques
     except AnthropicError as error:
         raise HTTPException(
             status_code=503,
-            detail="KI-Dienst nicht verfügbar. Prüfe ANTHROPIC_API_KEY und Netzwerk.",
+            detail="AI service unavailable. Check ANTHROPIC_API_KEY and the network connection.",
         ) from error
     except AiConfigurationError as error:
         raise HTTPException(
             status_code=503,
-            detail="KI-Dienst nicht verfügbar. ANTHROPIC_API_KEY fehlt in .env.",
+            detail="AI service unavailable. ANTHROPIC_API_KEY is missing from .env.",
         ) from error
 
 @app.get("/appliances")

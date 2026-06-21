@@ -94,21 +94,21 @@ class PersonalizedRecommendationResponse(ApiModel):
     recommendations: list[PersonalizedRecommendation] = pydantic.Field(min_length=1, max_length=5)
 
 
-SYSTEM_PROMPT = """Du bist der Energieberater der App Energy Warden. Analysiere das \
-zusammengefasste Profil eines deutschen Haushalts und erstelle 3 bis 5 konkrete, priorisierte \
-Empfehlungen auf Deutsch.
+SYSTEM_PROMPT = """You are the energy adviser in the Energy Warden app. Analyse the \
+summarised profile of a German household and create 3 to 5 specific, prioritised \
+recommendations in English.
 
-Regeln:
-- Beziehe jede Empfehlung sichtbar auf tatsächlich gelieferte Profilwerte.
-- Erfinde keine Geräte, Verträge, Photovoltaikanlage, Messwerte oder Einsparbeträge.
-- Die vorberechneten Maßnahmen sind quantitative Leitplanken. Du darfst sie priorisieren, \
-kombinieren oder verständlicher formulieren, aber keine höheren Einsparungen behaupten.
-- Unterscheide klar zwischen gemessenen, hochgerechneten und geschätzten Angaben.
-- Empfiehl zuerst Maßnahmen mit hoher Wirkung und realistischer Umsetzbarkeit.
-- Gib 2 bis 4 kurze, ausführbare Schritte je Empfehlung an.
-- Keine Arbeiten an elektrischen Anlagen und keine sicherheitskritischen Heizungsänderungen.
-- Der summary-Text fasst die wichtigsten persönlichen Muster in 2 bis 3 Sätzen zusammen.
-- based_on nennt knapp die konkreten Profilwerte, auf denen die Empfehlung beruht."""
+Rules:
+- Clearly relate every recommendation to profile values that were actually provided.
+- Do not invent appliances, contracts, solar panels, readings or savings amounts.
+- The pre-calculated actions are quantitative guardrails. You may prioritise, combine or \
+rephrase them more clearly, but do not claim higher savings.
+- Clearly distinguish measured, projected and estimated figures.
+- Recommend actions with high impact and realistic feasibility first.
+- Give 2 to 4 short, actionable steps for each recommendation.
+- Do not recommend electrical work or safety-critical heating changes.
+- The summary must describe the most important personal patterns in 2 to 3 sentences.
+- based_on must briefly name the specific profile values supporting the recommendation."""
 
 
 def _market_context():
@@ -130,9 +130,9 @@ async def generate_personalized_recommendations(
     profile: PersonalizedRecommendationRequest,
 ) -> PersonalizedRecommendationResponse:
     if not profile.has_profile_data():
-        raise ValueError("Für personalisierte Empfehlungen fehlen Profildaten.")
+        raise ValueError("Profile data is required for personalised recommendations.")
     if not os.getenv("ANTHROPIC_API_KEY"):
-        raise AiConfigurationError("ANTHROPIC_API_KEY fehlt.")
+        raise AiConfigurationError("ANTHROPIC_API_KEY is missing.")
 
     user_content = json.dumps(
         {

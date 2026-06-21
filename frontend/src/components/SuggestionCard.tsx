@@ -10,11 +10,11 @@ type Props = {
 function translateCategory(category: Suggestion["category"]): string {
   switch (category) {
     case "time_shift":
-      return "Zeitverschiebung";
+      return "Time shifting";
     case "weather":
-      return "PV-/Wetteroptimierung";
+      return "Solar/weather optimisation";
     case "always_on":
-      return "Dauerverbraucher";
+      return "Always-on load";
     default:
       return category;
   }
@@ -27,11 +27,11 @@ export function SuggestionCard({ suggestion }: Props) {
       <h3>{suggestion.appliance_name}</h3>
 
       <p>
-        Kategorie: <strong>{translateCategory(suggestion.category)}</strong>
+        Category: <strong>{translateCategory(suggestion.category)}</strong>
       </p>
 
       <p>
-        Empfohlenes Zeitfenster:{" "}
+        Recommended time window:{" "}
         <strong>
           {formatTimeWindow(
             suggestion.recommended_start,
@@ -41,7 +41,7 @@ export function SuggestionCard({ suggestion }: Props) {
       </p>
 
       <p>
-        Geschätzte Ersparnis:{" "}
+        Estimated savings:{" "}
         <strong>{formatEuro(suggestion.savings_eur)}</strong>
       </p>
 

@@ -30,14 +30,14 @@ export function GenerateSuggestionsButton({ onGenerated }: Props) {
     <div>
       <button onClick={handleClick} disabled={loading}>
         {loading
-          ? "Empfehlungen werden berechnet..."
-          : "Empfehlungen neu berechnen"}
+          ? "Calculating recommendations..."
+          : "Recalculate recommendations"}
       </button>
 
       {error && (
         <p>
-          Empfehlungen konnten nicht generiert werden. Bitte prüfen, ob
-          Preis-/Wetterdaten vorhanden sind und der API-Key gesetzt ist.
+          Recommendations could not be generated. Please check that price and
+          weather data are available and that the API key is configured.
         </p>
       )}
     </div>

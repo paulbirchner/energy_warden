@@ -44,7 +44,7 @@ export function createDemoData(): DemoDataBundle {
       meterNumber: "1 EMH 00428731",
       readingKwh: meterValue,
       readingDate,
-      note: index === 12 ? "Ablesung für die PoC-Präsentation" : "Monatliche Demo-Ablesung",
+      note: index === 12 ? "Reading for the PoC presentation" : "Monthly demo reading",
       createdAt: `${readingDate}T08:00:00`,
     };
   }).reverse();
@@ -59,12 +59,12 @@ export function createDemoData(): DemoDataBundle {
       invoices: [
         {
           id: "demo-invoice-electricity",
-          provider: "Stadtwerke Regensburg",
+          provider: "Regensburg Municipal Utilities",
           billingStart,
           billingEnd,
           consumptionKwh: monthlyConsumption.reduce((sum, value) => sum + value, 0),
           totalAmountEur: 1_284.6,
-          documentName: "stromabrechnung-demo.pdf",
+          documentName: "electricity-invoice-demo.pdf",
           documentSize: 486_240,
           createdAt: now,
         },
@@ -72,7 +72,7 @@ export function createDemoData(): DemoDataBundle {
       applianceEstimates: [
         {
           id: "demo-device-heat-pump",
-          applianceName: "Wärmepumpe",
+          applianceName: "Heat pump",
           powerWatts: 2_800,
           hoursPerDay: 2,
           daysPerWeek: 7,
@@ -83,7 +83,7 @@ export function createDemoData(): DemoDataBundle {
         },
         {
           id: "demo-device-dishwasher",
-          applianceName: "Geschirrspüler",
+          applianceName: "Dishwasher",
           powerWatts: 1_800,
           hoursPerDay: 1.2,
           daysPerWeek: 5,
@@ -94,7 +94,7 @@ export function createDemoData(): DemoDataBundle {
         },
         {
           id: "demo-device-washer",
-          applianceName: "Waschmaschine",
+          applianceName: "Washing machine",
           powerWatts: 2_000,
           hoursPerDay: 1.1,
           daysPerWeek: 3,
@@ -105,7 +105,7 @@ export function createDemoData(): DemoDataBundle {
         },
         {
           id: "demo-device-gaming-pc",
-          applianceName: "Gaming-PC",
+          applianceName: "Gaming PC",
           powerWatts: 450,
           hoursPerDay: 3,
           daysPerWeek: 5,
@@ -116,7 +116,7 @@ export function createDemoData(): DemoDataBundle {
         },
         {
           id: "demo-device-tv",
-          applianceName: "Fernseher",
+          applianceName: "Television",
           powerWatts: 120,
           hoursPerDay: 4,
           daysPerWeek: 7,
@@ -131,8 +131,8 @@ export function createDemoData(): DemoDataBundle {
       tariffs: [
         {
           id: "demo-tariff-current",
-          provider: "Stadtwerke Regensburg",
-          name: "Regensburg Komfort",
+          provider: "Regensburg Municipal Utilities",
+          name: "Regensburg Comfort",
           basePriceMonthly: 14.5,
           unitPrice: 0.36,
           validFrom: dateInput(relativeMonth(-8, 1)),
@@ -141,8 +141,8 @@ export function createDemoData(): DemoDataBundle {
         },
         {
           id: "demo-tariff-alternative",
-          provider: "Grünstrom Bayern",
-          name: "ÖkoDirekt 24",
+          provider: "Bavaria Green Energy",
+          name: "EcoDirect 24",
           basePriceMonthly: 11.9,
           unitPrice: 0.31,
           validFrom: dateInput(relativeMonth(-2, 1)),
@@ -152,7 +152,7 @@ export function createDemoData(): DemoDataBundle {
         {
           id: "demo-tariff-flex",
           provider: "Energy Flex",
-          name: "Flex Zuhause",
+          name: "Flex Home",
           basePriceMonthly: 9.9,
           unitPrice: 0.335,
           validFrom: dateInput(relativeMonth(-1, 1)),

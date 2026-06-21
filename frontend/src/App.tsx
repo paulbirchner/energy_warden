@@ -26,60 +26,60 @@ export default function App() {
           <span className="brand-mark" aria-hidden="true">EW</span>
           <span>
             <strong>Energy Warden</strong>
-            <small>Energie bewusst steuern</small>
+            <small>Take control of your energy</small>
           </span>
         </button>
 
         <div className="topbar-actions">
-          <nav aria-label="Hauptnavigation">
+          <nav aria-label="Main navigation">
           <button
             className={page === "dashboard" ? "nav-item active" : "nav-item"}
             type="button"
             onClick={() => setPage("dashboard")}
           >
-            Übersicht
+            Dashboard
           </button>
           <button
             className={page === "consumption" ? "nav-item active" : "nav-item"}
             type="button"
             onClick={() => setPage("consumption")}
           >
-            Verbrauch
+            Consumption
           </button>
           <button
             className={page === "tariffs" ? "nav-item active" : "nav-item"}
             type="button"
             onClick={() => setPage("tariffs")}
           >
-            Tarife &amp; Kosten
+            Tariffs &amp; Costs
           </button>
           <button
             className={page === "analysis" ? "nav-item active" : "nav-item"}
             type="button"
             onClick={() => setPage("analysis")}
           >
-            Analyse
+            Analysis
           </button>
           <button
             className={page === "recommendations" ? "nav-item active" : "nav-item"}
             type="button"
             onClick={() => setPage("recommendations")}
           >
-            Empfehlungen
+            Recommendations
           </button>
           <button
             className={page === "notifications" ? "nav-item active" : "nav-item"}
             type="button"
             onClick={() => setPage("notifications")}
           >
-            Hinweise
+            Alerts
           </button>
           <button
             className={page === "reports" ? "nav-item active" : "nav-item"}
             type="button"
             onClick={() => setPage("reports")}
           >
-            Berichte
+            Reports
           </button>
           </nav>
           <DemoDataControls />

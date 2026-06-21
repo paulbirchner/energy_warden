@@ -17,15 +17,15 @@ import { generateLocalRecommendations } from "../utils/recommendationUtils";
 
 type Filter = "all" | "high" | "easy" | "completed";
 
-const euro = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" });
-const decimal = new Intl.NumberFormat("de-DE", { maximumFractionDigits: 1 });
+const euro = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR" });
+const decimal = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 });
 
-const priorityLabels = { high: "Hohe Priorität", medium: "Mittlere Priorität", low: "Niedrige Priorität" };
+const priorityLabels = { high: "High priority", medium: "Medium priority", low: "Low priority" };
 const categoryLabels: Record<RecommendationCategory, string> = {
-  device: "Gerät",
-  behavior: "Gewohnheit",
-  tariff: "Tarif",
-  anomaly: "Auffälligkeit",
+  device: "Appliance",
+  behavior: "Habit",
+  tariff: "Tariff",
+  anomaly: "Anomaly",
 };
 
 const AI_RECOMMENDATION_STORAGE_KEY = "energy-warden-ai-recommendations-v1";
@@ -137,7 +137,7 @@ export default function RecommendationsPage() {
       localStorage.setItem(AI_RECOMMENDATION_STORAGE_KEY, JSON.stringify(stored));
       setAiStatus("idle");
     } catch (error) {
-      setAiError(error instanceof Error ? error.message : "Die KI-Analyse konnte nicht erstellt werden.");
+      setAiError(error instanceof Error ? error.message : "The AI analysis could not be created.");
       setAiStatus("error");
     }
   }
@@ -146,39 +146,39 @@ export default function RecommendationsPage() {
     <main className="page-content recommendations-page">
       <div className="page-heading heading-row">
         <div>
-          <p className="eyebrow">Empfehlungen &amp; Einsparvorschläge</p>
-          <h1>Kleine Schritte, messbare Wirkung</h1>
-          <p className="subtitle">Persönlich priorisiert aus deinen Geräten, Verbräuchen und Tarifen.</p>
+          <p className="eyebrow">Recommendations &amp; savings ideas</p>
+          <h1>Small steps, measurable impact</h1>
+          <p className="subtitle">Personally prioritised from your appliances, consumption and tariffs.</p>
         </div>
-        <span className="hardware-badge"><Icon name="leaf" size={17} /> Ohne teure Smart-Home-Hardware</span>
+        <span className="hardware-badge"><Icon name="leaf" size={17} /> No expensive smart-home hardware</span>
       </div>
 
       <div className="recommendation-summary">
         <article className="recommendation-potential">
           <span className="icon-tile large"><Icon name="savings" /></span>
-          <div><small>Berechnetes Einsparpotenzial</small><strong>{euro.format(potentialEur)} <em>pro Jahr</em></strong><p>{decimal.format(potentialKwh)} kWh weniger Verbrauch möglich</p></div>
+          <div><small>Calculated savings potential</small><strong>{euro.format(potentialEur)} <em>per year</em></strong><p>Up to {decimal.format(potentialKwh)} kWh less consumption</p></div>
         </article>
         <div className="recommendation-mini-stats">
-          <span><strong>{active.filter((item) => !progressStore.progress.completedIds.includes(item.id)).length}</strong><small>offene Maßnahmen</small></span>
-          <span><strong>{completed.length}</strong><small>bereits umgesetzt</small></span>
-          <span><strong>{active.filter((item) => item.priority === "high" && !progressStore.progress.completedIds.includes(item.id)).length}</strong><small>hohe Priorität</small></span>
+          <span><strong>{active.filter((item) => !progressStore.progress.completedIds.includes(item.id)).length}</strong><small>open actions</small></span>
+          <span><strong>{completed.length}</strong><small>already completed</small></span>
+          <span><strong>{active.filter((item) => item.priority === "high" && !progressStore.progress.completedIds.includes(item.id)).length}</strong><small>high priority</small></span>
         </div>
       </div>
 
       <section className="ai-recommendation-panel">
         <div className="ai-recommendation-header">
           <span className="ai-recommendation-icon"><Icon name="recommendation" size={25} /></span>
-          <div><p className="eyebrow">KI-Beratung</p><h2>Dein Energieprofil individuell analysieren</h2><p>Die KI verbindet deine Verbrauchsentwicklung, Geräte, Tarife und berechneten Maßnahmen zu einer priorisierten persönlichen Einschätzung.</p></div>
-          <button className="ai-generate-button" type="button" disabled={!hasProfileData || aiStatus === "loading"} onClick={() => { void createAiRecommendations(); }}><Icon name={aiStatus === "loading" ? "refresh" : "recommendation"} size={18} />{aiStatus === "loading" ? "KI analysiert …" : currentAiResult ? "Analyse aktualisieren" : "KI-Empfehlungen erstellen"}</button>
+          <div><p className="eyebrow">AI advice</p><h2>Analyse your energy profile individually</h2><p>The AI combines your consumption trend, appliances, tariffs and calculated actions into a prioritised personal assessment.</p></div>
+          <button className="ai-generate-button" type="button" disabled={!hasProfileData || aiStatus === "loading"} onClick={() => { void createAiRecommendations(); }}><Icon name={aiStatus === "loading" ? "refresh" : "recommendation"} size={18} />{aiStatus === "loading" ? "AI is analysing…" : currentAiResult ? "Update analysis" : "Create AI recommendations"}</button>
         </div>
 
-        {!hasProfileData && <p className="ai-profile-hint"><Icon name="alert" size={14} /> Erfasse zuerst mindestens einen Zählerstand, ein Gerät, eine Rechnung oder einen Tarif.</p>}
-        {aiStatus === "error" && <p className="form-error">{aiError} Prüfe Backend und `ANTHROPIC_API_KEY`.</p>}
-        <p className="ai-privacy-note"><Icon name="alert" size={13} /> Übertragen werden nur zusammengefasste Energiedaten – keine Zählernummern, Notizen oder Dokumente. Die Analyse nutzt einen kostenpflichtigen KI-Aufruf.</p>
+        {!hasProfileData && <p className="ai-profile-hint"><Icon name="alert" size={14} /> First record at least one meter reading, appliance, invoice or tariff.</p>}
+        {aiStatus === "error" && <p className="form-error">{aiError} Check the backend and `ANTHROPIC_API_KEY`.</p>}
+        <p className="ai-privacy-note"><Icon name="alert" size={13} /> Only summarised energy data is transmitted—no meter numbers, notes or documents. The analysis uses a paid AI request.</p>
 
         {currentAiResult && (
           <div className="ai-result">
-            <div className="ai-result-summary"><span><Icon name="recommendation" size={20} /></span><div><strong>Persönliche Einordnung</strong><p>{currentAiResult.summary}</p><small>Erstellt am {new Date(currentAiResult.generatedAt).toLocaleString("de-DE")}</small></div></div>
+            <div className="ai-result-summary"><span><Icon name="recommendation" size={20} /></span><div><strong>Personal assessment</strong><p>{currentAiResult.summary}</p><small>Created on {new Date(currentAiResult.generatedAt).toLocaleString("en-GB")}</small></div></div>
             <div className="ai-recommendation-grid">{currentAiResult.recommendations.map((recommendation, index) => <AiRecommendationCard key={`${recommendation.title}-${index}`} recommendation={recommendation} />)}</div>
           </div>
         )}
@@ -187,25 +187,25 @@ export default function RecommendationsPage() {
       <section className="recommendation-section">
         <div className="recommendation-toolbar">
           <div>
-            <p className="eyebrow">FA-18 bis FA-22</p>
-            <h2>Berechnete Maßnahmen</h2>
+            <p className="eyebrow"></p>
+            <h2>Calculated actions</h2>
           </div>
-          <div className="recommendation-filters" aria-label="Empfehlungen filtern">
-            <FilterButton active={filter === "all"} label="Offen" onClick={() => setFilter("all")} />
-            <FilterButton active={filter === "high"} label="Hohe Priorität" onClick={() => setFilter("high")} />
-            <FilterButton active={filter === "easy"} label="Schnell umsetzbar" onClick={() => setFilter("easy")} />
-            <FilterButton active={filter === "completed"} label={`Umgesetzt (${completed.length})`} onClick={() => setFilter("completed")} />
+          <div className="recommendation-filters" aria-label="Filter recommendations">
+            <FilterButton active={filter === "all"} label="Open" onClick={() => setFilter("all")} />
+            <FilterButton active={filter === "high"} label="High priority" onClick={() => setFilter("high")} />
+            <FilterButton active={filter === "easy"} label="Quick to implement" onClick={() => setFilter("easy")} />
+            <FilterButton active={filter === "completed"} label={`Completed (${completed.length})`} onClick={() => setFilter("completed")} />
           </div>
         </div>
 
         {visible.length === 0
-          ? <div className="recommendation-empty"><span className="icon-tile large"><Icon name="check" /></span><strong>{filter === "completed" ? "Noch keine Maßnahme umgesetzt" : "Hier ist gerade alles erledigt"}</strong><p>Wähle einen anderen Filter oder erfasse weitere Verbrauchsdaten.</p></div>
+          ? <div className="recommendation-empty"><span className="icon-tile large"><Icon name="check" /></span><strong>{filter === "completed" ? "No actions completed yet" : "Everything here is done"}</strong><p>Select another filter or record more consumption data.</p></div>
           : <div className="recommendation-grid">{visible.map((recommendation) => <RecommendationCard key={recommendation.id} recommendation={recommendation} completed={progressStore.progress.completedIds.includes(recommendation.id)} onComplete={() => progressStore.toggleCompleted(recommendation.id)} onDismiss={() => progressStore.dismiss(recommendation.id)} />)}</div>}
 
-        {progressStore.progress.dismissedIds.length > 0 && <button className="restore-button" type="button" onClick={progressStore.restoreDismissed}>Ausgeblendete Empfehlungen wiederherstellen</button>}
+        {progressStore.progress.dismissedIds.length > 0 && <button className="restore-button" type="button" onClick={progressStore.restoreDismissed}>Restore hidden recommendations</button>}
       </section>
 
-      <p className="calculation-note"><Icon name="calculator" size={15} /> Einsparungen sind Schätzwerte je Einzelmaßnahme und nicht zwingend vollständig addierbar.</p>
+      <p className="calculation-note"><Icon name="calculator" size={15} /> Savings are estimates for each individual action and cannot necessarily be added together in full.</p>
     </main>
   );
 }
@@ -220,9 +220,9 @@ function AiRecommendationCard({ recommendation }: { recommendation: Personalized
       </div>
       <h3>{recommendation.title}</h3>
       <p>{recommendation.description}</p>
-      <div className="ai-reasoning"><strong>Warum das zu dir passt</strong><p>{recommendation.reasoning}</p></div>
+      <div className="ai-reasoning"><strong>Why this suits you</strong><p>{recommendation.reasoning}</p></div>
       <ol>{recommendation.steps.map((step) => <li key={step}>{step}</li>)}</ol>
-      <small><strong>Datengrundlage:</strong> {recommendation.basedOn}</small>
+      <small><strong>Data basis:</strong> {recommendation.basedOn}</small>
     </article>
   );
 }
@@ -246,25 +246,25 @@ function RecommendationCard({ recommendation, completed, onComplete, onDismiss }
       <p className="recommendation-description">{recommendation.description}</p>
 
       <div className="recommendation-impact">
-        <span><small>Finanziell</small><strong>{recommendation.annualSavingsEur > 0 ? euro.format(recommendation.annualSavingsEur) : "Nach Erfassung"}<em>{recommendation.annualSavingsEur > 0 ? "/ Jahr" : "berechenbar"}</em></strong></span>
-        <span><small>Verbrauch</small><strong>{recommendation.annualSavingsKwh > 0 ? `${decimal.format(recommendation.annualSavingsKwh)} kWh` : "–"}<em>{recommendation.annualSavingsKwh > 0 ? "/ Jahr" : ""}</em></strong></span>
+        <span><small>Financial</small><strong>{recommendation.annualSavingsEur > 0 ? euro.format(recommendation.annualSavingsEur) : "After recording"}<em>{recommendation.annualSavingsEur > 0 ? "/ year" : "calculable"}</em></strong></span>
+        <span><small>Consumption</small><strong>{recommendation.annualSavingsKwh > 0 ? `${decimal.format(recommendation.annualSavingsKwh)} kWh` : "–"}<em>{recommendation.annualSavingsKwh > 0 ? "/ year" : ""}</em></strong></span>
       </div>
 
       <div className="recommendation-meta">
-        <span><Icon name="check" size={15} /> {recommendation.feasibility === "easy" ? "Einfach umsetzbar" : recommendation.feasibility === "medium" ? "Gut planbar" : "Etwas Vorbereitung"}</span>
+        <span><Icon name="check" size={15} /> {recommendation.feasibility === "easy" ? "Easy to implement" : recommendation.feasibility === "medium" ? "Easy to plan" : "Some preparation"}</span>
         <span><Icon name="clock" size={15} /> {recommendation.effort}</span>
-        {recommendation.noHardware && <span><Icon name="leaf" size={15} /> Ohne Zusatzhardware</span>}
+        {recommendation.noHardware && <span><Icon name="leaf" size={15} /> No additional hardware</span>}
       </div>
 
       <details className="recommendation-details">
-        <summary>Konkrete Schritte anzeigen</summary>
+        <summary>Show specific steps</summary>
         <ol>{recommendation.steps.map((step) => <li key={step}>{step}</li>)}</ol>
-        <p><strong>Berechnungsgrundlage:</strong> {recommendation.basedOn}</p>
+        <p><strong>Calculation basis:</strong> {recommendation.basedOn}</p>
       </details>
 
       <div className="recommendation-actions">
-        <button className={completed ? "complete-button completed" : "complete-button"} type="button" onClick={onComplete}><Icon name="check" size={17} />{completed ? "Als offen markieren" : "Als umgesetzt markieren"}</button>
-        {!completed && <button className="dismiss-button" type="button" onClick={onDismiss}>Ausblenden</button>}
+        <button className={completed ? "complete-button completed" : "complete-button"} type="button" onClick={onComplete}><Icon name="check" size={17} />{completed ? "Mark as open" : "Mark as completed"}</button>
+        {!completed && <button className="dismiss-button" type="button" onClick={onDismiss}>Hide</button>}
       </div>
     </article>
   );

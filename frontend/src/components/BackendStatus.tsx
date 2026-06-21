@@ -14,12 +14,12 @@ export function BackendStatus() {
   }, []);
 
   if (status === "loading") {
-    return <p>Backend-Status: wird geprüft...</p>;
+    return <p>Backend status: checking...</p>;
   }
 
   if (status === "offline") {
-    return <p>Backend-Status: nicht erreichbar</p>;
+    return <p>Backend status: unavailable</p>;
   }
 
-  return <p>Backend-Status: online</p>;
+  return <p>Backend status: online</p>;
 }

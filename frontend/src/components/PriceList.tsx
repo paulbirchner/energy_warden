@@ -20,8 +20,8 @@ export function PriceList() {
   if (loading) {
     return (
       <section>
-        <h2>Heutige Strompreise</h2>
-        <p>Lade Tagespreise...</p>
+        <h2>Today's electricity prices</h2>
+        <p>Loading today's prices...</p>
       </section>
     );
   }
@@ -29,8 +29,8 @@ export function PriceList() {
   if (error) {
     return (
       <section>
-        <h2>Heutige Strompreise</h2>
-        <p>Preisdaten konnten nicht geladen werden.</p>
+        <h2>Today's electricity prices</h2>
+        <p>Price data could not be loaded.</p>
       </section>
     );
   }
@@ -38,10 +38,10 @@ export function PriceList() {
   if (prices.length === 0) {
     return (
       <section>
-        <h2>Heutige Strompreise</h2>
-        <p>Keine Preisdaten vorhanden.</p>
+        <h2>Today's electricity prices</h2>
+        <p>No price data is available.</p>
         <p>
-          Für die Demo müssen die Preisdaten im Backend synchronisiert werden.
+          Price data must be synchronised in the backend for the demo.
         </p>
       </section>
     );
@@ -49,14 +49,14 @@ export function PriceList() {
 
   return (
     <section>
-      <h2>Heutige Strompreise</h2>
+      <h2>Today's electricity prices</h2>
 
       <ul>
         {prices.map((price) => (
           <li key={price.id}>
             {formatHourFromUnix(price.timestamp)}:{" "}
             <strong>{formatEstimatedHouseholdPrice(price.price_eur_mwh)}</strong>{" "}
-            <small>(Börse {formatCentKwh(price.price_eur_mwh)})</small>
+            <small>(wholesale {formatCentKwh(price.price_eur_mwh)})</small>
           </li>
         ))}
       </ul>

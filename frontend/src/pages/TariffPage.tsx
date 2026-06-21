@@ -10,8 +10,8 @@ import { dynamicBasePriceMonthly, formatCentKwh, formatEstimatedHouseholdPrice, 
 type Tab = "tariff" | "calculator" | "compare";
 
 const today = new Date().toISOString().slice(0, 10);
-const euro = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" });
-const decimal = new Intl.NumberFormat("de-DE", { maximumFractionDigits: 1 });
+const euro = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR" });
+const decimal = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 });
 
 /** Berechnet die jährlichen Gesamtkosten eines Tarifs für eine Verbrauchsmenge. */
 function annualCost(tariff: Tariff, usage: number) {
@@ -56,35 +56,35 @@ export default function TariffPage() {
     <main className="page-content tariff-page">
       <div className="page-heading heading-row">
         <div>
-          <p className="eyebrow">Tarif- und Kostenermittlung</p>
-          <h1>Tarife &amp; Kosten</h1>
-          <p className="subtitle">Verstehe deine laufenden Kosten und finde den Tarif, der zu deinem Verbrauch passt.</p>
+          <p className="eyebrow">Tariffs and cost calculation</p>
+          <h1>Tariffs &amp; Costs</h1>
+          <p className="subtitle">Understand your ongoing costs and find the tariff that fits your consumption.</p>
         </div>
-        <span className="local-badge"><span /> Tarifdaten lokal gespeichert</span>
+        <span className="local-badge"><span /> Tariff data stored locally</span>
       </div>
 
       <div className="stats-grid">
         <article className="stat-card">
           <span className="icon-tile"><Icon name="tariff" /></span>
-          <span><small>Aktueller Stromtarif</small><strong>{currentElectricity ? currentElectricity.name : "Noch nicht erfasst"}</strong></span>
+          <span><small>Current electricity tariff</small><strong>{currentElectricity ? currentElectricity.name : "Not recorded yet"}</strong></span>
         </article>
         <article className="stat-card">
           <span className="icon-tile"><Icon name="calculator" /></span>
-          <span><small>Hochgerechneter Verbrauch</small><strong>{annualElectricity ? `${decimal.format(annualElectricity)} kWh/Jahr` : "Keine Datengrundlage"}</strong></span>
+          <span><small>Projected consumption</small><strong>{annualElectricity ? `${decimal.format(annualElectricity)} kWh/year` : "No data available"}</strong></span>
         </article>
         <article className="stat-card">
           <span className="icon-tile"><Icon name="compare" /></span>
-          <span><small>Mögliches Einsparpotenzial</small><strong>{euro.format(potentialSavings)} / Jahr</strong></span>
+          <span><small>Potential savings</small><strong>{euro.format(potentialSavings)} / year</strong></span>
         </article>
       </div>
 
       <DynamicPrice />
 
       <div className="workspace-card tariff-workspace">
-        <div className="tabs" role="tablist" aria-label="Tarif- und Kostenfunktionen">
-          <TabButton active={tab === "tariff"} icon="tariff" label="Tarif erfassen" onClick={() => setTab("tariff")} />
-          <TabButton active={tab === "calculator"} icon="calculator" label="Kosten berechnen" onClick={() => setTab("calculator")} />
-          <TabButton active={tab === "compare"} icon="compare" label="Tarife vergleichen" onClick={() => setTab("compare")} />
+        <div className="tabs" role="tablist" aria-label="Tariff and cost features">
+          <TabButton active={tab === "tariff"} icon="tariff" label="Add tariff" onClick={() => setTab("tariff")} />
+          <TabButton active={tab === "calculator"} icon="calculator" label="Calculate costs" onClick={() => setTab("calculator")} />
+          <TabButton active={tab === "compare"} icon="compare" label="Compare tariffs" onClick={() => setTab("compare")} />
         </div>
         <div className="tab-content">
           {tab === "tariff" && <TariffForm tariffs={tariffs.data.tariffs} onSave={tariffs.addTariff} onCurrent={tariffs.setCurrent} onRemove={tariffs.removeTariff} />}
@@ -118,12 +118,12 @@ function DynamicPrice() {
     <section className="live-price-card">
       <div className="live-price-heading">
         <span className="live-dot" />
-        <div><strong>Geschätzter Haushaltsstrompreis</strong><small>Deutscher Börsenpreis plus variable Preisbestandteile</small></div>
+        <div><strong>Estimated household electricity price</strong><small>German wholesale price plus variable price components</small></div>
       </div>
       <div className="live-price-value">
-        {status === "loading" && <span className="muted-value">Wird geladen …</span>}
-        {status === "ready" && price !== null && <><strong>{formatEstimatedHouseholdPrice(price)}</strong><small>Börse {formatCentKwh(price)} + pauschal {priceSurchargeCentKwh.toFixed(2).replace(".", ",")} ct/kWh · ohne Grundpreis</small></>}
-        {status === "error" && <><span className="muted-value">Preisschnittstelle nicht erreichbar</span><button className="text-button" type="button" onClick={retry}><Icon name="refresh" size={17} /> Erneut abrufen</button></>}
+        {status === "loading" && <span className="muted-value">Loading…</span>}
+        {status === "ready" && price !== null && <><strong>{formatEstimatedHouseholdPrice(price)}</strong><small>Wholesale {formatCentKwh(price)} + flat {priceSurchargeCentKwh.toFixed(2)} ct/kWh · excluding base charge</small></>}
+        {status === "error" && <><span className="muted-value">Price interface unavailable</span><button className="text-button" type="button" onClick={retry}><Icon name="refresh" size={17} /> Try again</button></>}
       </div>
     </section>
   );
@@ -159,17 +159,17 @@ function TariffForm({ tariffs, onSave, onCurrent, onRemove }: { tariffs: Tariff[
 
   return (
     <div>
-      <div className="form-intro"><span className="icon-tile large"><Icon name="tariff" size={26} /></span><div><h2>Individuellen Tarif erfassen</h2><p>Hinterlege Arbeits- und Grundpreis für eine realistische Kostenberechnung.</p></div></div>
+      <div className="form-intro"><span className="icon-tile large"><Icon name="tariff" size={26} /></span><div><h2>Add an individual tariff</h2><p>Enter the unit price and base charge for a realistic cost calculation.</p></div></div>
       <form onSubmit={submit}>
         <div className="form-grid tariff-form-grid">
-          <label>Anbieter<input required value={provider} onChange={(event) => setProvider(event.target.value)} placeholder="z. B. Stadtwerke" /></label>
-          <label>Tarifname<input required value={name} onChange={(event) => setName(event.target.value)} placeholder="z. B. ÖkoFix 24" /></label>
-          <label>Arbeitspreis<div className="input-unit"><input required min="0" step="0.01" type="number" value={unitPrice} onChange={(event) => setUnitPrice(event.target.value)} /><span>ct/kWh</span></div></label>
-          <label>Grundpreis pro Monat<div className="input-unit"><input required min="0" step="0.01" type="number" value={basePrice} onChange={(event) => setBasePrice(event.target.value)} /><span>€</span></div></label>
-          <label>Gültig seit<input required max={today} type="date" value={validFrom} onChange={(event) => setValidFrom(event.target.value)} /></label>
-          <label className="checkbox-label"><input type="checkbox" checked={isCurrent} onChange={(event) => setIsCurrent(event.target.checked)} /><span>Als aktuellen Tarif verwenden<small>Ersetzt den bisher aktiven Stromtarif.</small></span></label>
+          <label>Provider<input required value={provider} onChange={(event) => setProvider(event.target.value)} placeholder="e.g. municipal utilities" /></label>
+          <label>Tariff name<input required value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. EcoFix 24" /></label>
+          <label>Unit price<div className="input-unit"><input required min="0" step="0.01" type="number" value={unitPrice} onChange={(event) => setUnitPrice(event.target.value)} /><span>ct/kWh</span></div></label>
+          <label>Base charge per month<div className="input-unit"><input required min="0" step="0.01" type="number" value={basePrice} onChange={(event) => setBasePrice(event.target.value)} /><span>€</span></div></label>
+          <label>Valid from<input required max={today} type="date" value={validFrom} onChange={(event) => setValidFrom(event.target.value)} /></label>
+          <label className="checkbox-label"><input type="checkbox" checked={isCurrent} onChange={(event) => setIsCurrent(event.target.checked)} /><span>Use as current tariff<small>Replaces the currently active electricity tariff.</small></span></label>
         </div>
-        <button className={saved ? "primary-button saved" : "primary-button"} type="submit"><Icon name={saved ? "check" : "tariff"} size={19} />{saved ? "Gespeichert" : "Tarif speichern"}</button>
+        <button className={saved ? "primary-button saved" : "primary-button"} type="submit"><Icon name={saved ? "check" : "tariff"} size={19} />{saved ? "Saved" : "Save tariff"}</button>
       </form>
 
       <SavedTariffs tariffs={tariffs} onCurrent={onCurrent} onRemove={onRemove} />
@@ -181,13 +181,13 @@ function TariffForm({ tariffs, onSave, onCurrent, onRemove }: { tariffs: Tariff[
 function SavedTariffs({ tariffs, onCurrent, onRemove }: { tariffs: Tariff[]; onCurrent: (id: string) => void; onRemove: (id: string) => void }) {
   return (
     <div className="saved-tariffs">
-      <div className="subheading"><h3>Gespeicherte Tarife</h3><span>{tariffs.length}</span></div>
-      {tariffs.length === 0 ? <p className="inline-empty">Noch keine Tarife erfasst.</p> : tariffs.map((tariff) => (
+      <div className="subheading"><h3>Saved tariffs</h3><span>{tariffs.length}</span></div>
+      {tariffs.length === 0 ? <p className="inline-empty">No tariffs recorded yet.</p> : tariffs.map((tariff) => (
         <div className="saved-tariff-row" key={tariff.id}>
           <span className="utility-symbol electricity">⚡</span>
-          <span className="tariff-row-main"><strong>{tariff.name}{tariff.isCurrent && <em>Aktuell</em>}</strong><small>{tariff.provider} · {(tariff.unitPrice * 100).toFixed(2).replace(".", ",")} ct/kWh · {euro.format(tariff.basePriceMonthly)}/Monat</small></span>
-          {!tariff.isCurrent && <button className="secondary-button" type="button" onClick={() => onCurrent(tariff.id)}>Als aktuell</button>}
-          <button className="icon-button" type="button" aria-label={`${tariff.name} löschen`} onClick={() => onRemove(tariff.id)}><Icon name="trash" size={18} /></button>
+          <span className="tariff-row-main"><strong>{tariff.name}{tariff.isCurrent && <em>Current</em>}</strong><small>{tariff.provider} · {(tariff.unitPrice * 100).toFixed(2)} ct/kWh · {euro.format(tariff.basePriceMonthly)}/month</small></span>
+          {!tariff.isCurrent && <button className="secondary-button" type="button" onClick={() => onCurrent(tariff.id)}>Set as current</button>}
+          <button className="icon-button" type="button" aria-label={`Delete ${tariff.name}`} onClick={() => onRemove(tariff.id)}><Icon name="trash" size={18} /></button>
         </div>
       ))}
     </div>
@@ -211,19 +211,19 @@ function CostCalculator({ tariffs, annualElectricity }: { tariffs: Tariff[]; ann
     setUsage(tariff && annualElectricity ? annualElectricity.toFixed(1) : "");
   }
 
-  if (!selected) return <FeatureEmpty icon="calculator" title="Noch kein Tarif für die Berechnung" text="Erfasse zuerst einen Stromtarif." />;
+  if (!selected) return <FeatureEmpty icon="calculator" title="No tariff available for calculation" text="Add an electricity tariff first." />;
 
   return (
     <div>
-      <div className="form-intro"><span className="icon-tile large"><Icon name="calculator" size={26} /></span><div><h2>Verbrauchskosten berechnen</h2><p>Grundpreis und Verbrauchspreis werden transparent aufgeschlüsselt.</p></div></div>
+      <div className="form-intro"><span className="icon-tile large"><Icon name="calculator" size={26} /></span><div><h2>Calculate consumption costs</h2><p>The base charge and consumption cost are shown separately.</p></div></div>
       <div className="form-grid">
-        <label>Tarif<select value={selected.id} onChange={(event) => selectTariff(event.target.value)}>{tariffs.map((tariff) => <option key={tariff.id} value={tariff.id}>{tariff.name} · {tariff.provider}</option>)}</select></label>
-        <label>Jahresverbrauch<div className="input-unit"><input min="0" step="0.1" type="number" value={usage} onChange={(event) => setUsage(event.target.value)} /><span>kWh</span></div></label>
+        <label>Tariff<select value={selected.id} onChange={(event) => selectTariff(event.target.value)}>{tariffs.map((tariff) => <option key={tariff.id} value={tariff.id}>{tariff.name} · {tariff.provider}</option>)}</select></label>
+        <label>Annual consumption<div className="input-unit"><input min="0" step="0.1" type="number" value={usage} onChange={(event) => setUsage(event.target.value)} /><span>kWh</span></div></label>
       </div>
-      {annualElectricity > 0 && <p className="data-hint"><Icon name="check" size={16} /> Verbrauch aus deinen vorhandenen Eingaben hochgerechnet.</p>}
+      {annualElectricity > 0 && <p className="data-hint"><Icon name="check" size={16} /> Consumption projected from your existing entries.</p>}
       <div className="cost-result">
-        <div className="cost-total"><span>Geschätzte Gesamtkosten<small>{euro.format((baseCost + variableCost) / 12)} pro Monat</small></span><strong>{euro.format(baseCost + variableCost)}<small>pro Jahr</small></strong></div>
-        <div className="cost-breakdown"><span>Verbrauchskosten <strong>{euro.format(variableCost)}</strong></span><span>Grundpreis <strong>{euro.format(baseCost)}</strong></span></div>
+        <div className="cost-total"><span>Estimated total cost<small>{euro.format((baseCost + variableCost) / 12)} per month</small></span><strong>{euro.format(baseCost + variableCost)}<small>per year</small></strong></div>
+        <div className="cost-breakdown"><span>Consumption cost <strong>{euro.format(variableCost)}</strong></span><span>Base charge <strong>{euro.format(baseCost)}</strong></span></div>
       </div>
     </div>
   );
@@ -238,18 +238,18 @@ function TariffComparison({ tariffs, annualElectricity, consumption, onCurrent }
 
   return (
     <div>
-      <div className="form-intro"><span className="icon-tile large"><Icon name="compare" size={26} /></span><div><h2>Tarife vergleichen</h2><p>Vergleiche die erwarteten Gesamtkosten bei identischem Verbrauch.</p></div></div>
-      <div className="comparison-controls"><label>Jahresverbrauch<div className="input-unit"><input min="0" step="0.1" type="number" value={usage} onChange={(event) => setUsage(event.target.value)} /><span>kWh</span></div></label></div>
-      {matching.length < 2 ? <FeatureEmpty icon="compare" title="Mindestens zwei Tarife benötigt" text="Erfasse einen weiteren Stromtarif, um Kosten gegenüberzustellen." /> : (
+      <div className="form-intro"><span className="icon-tile large"><Icon name="compare" size={26} /></span><div><h2>Compare tariffs</h2><p>Compare expected total costs at the same consumption level.</p></div></div>
+      <div className="comparison-controls"><label>Annual consumption<div className="input-unit"><input min="0" step="0.1" type="number" value={usage} onChange={(event) => setUsage(event.target.value)} /><span>kWh</span></div></label></div>
+      {matching.length < 2 ? <FeatureEmpty icon="compare" title="At least two tariffs required" text="Add another electricity tariff to compare costs." /> : (
         <div className="comparison-list">{matching.map((tariff, index) => {
           const cost = annualCost(tariff, Number(usage));
           const difference = currentCost === null ? null : currentCost - cost;
           return <article className={`comparison-card ${index === 0 ? "best" : ""}`} key={tariff.id}>
-            <div><span className="utility-symbol electricity">⚡</span>{index === 0 && <em className="best-label">Günstigster Tarif</em>}</div>
+            <div><span className="utility-symbol electricity">⚡</span>{index === 0 && <em className="best-label">Cheapest tariff</em>}</div>
             <h3>{tariff.name}</h3><p>{tariff.provider}</p>
-            <strong className="comparison-price">{euro.format(cost)}<small>pro Jahr</small></strong>
-            {difference !== null && difference > 0 && <span className="saving-label">Du sparst {euro.format(difference)}</span>}
-            {tariff.isCurrent ? <span className="current-label">Dein aktueller Tarif</span> : <button className="secondary-button full" type="button" onClick={() => onCurrent(tariff.id)}>Als aktuell festlegen</button>}
+            <strong className="comparison-price">{euro.format(cost)}<small>per year</small></strong>
+            {difference !== null && difference > 0 && <span className="saving-label">You save {euro.format(difference)}</span>}
+            {tariff.isCurrent ? <span className="current-label">Your current tariff</span> : <button className="secondary-button full" type="button" onClick={() => onCurrent(tariff.id)}>Set as current</button>}
           </article>;
         })}</div>
       )}
@@ -275,16 +275,16 @@ function DynamicDayComparison({ tariffs, annualElectricity, consumption }: { tar
   );
 
   if (status === "loading") {
-    return <section className="dynamic-comparison"><p className="dynamic-status">Tagespreise und Lastprofil werden berechnet …</p></section>;
+    return <section className="dynamic-comparison"><p className="dynamic-status">Calculating daily prices and load profile…</p></section>;
   }
   if (status === "error") {
-    return <section className="dynamic-comparison"><FeatureEmpty icon="compare" title="Dynamischer Vergleich nicht verfügbar" text="Die Tagespreise konnten nicht vom Backend geladen werden." /></section>;
+    return <section className="dynamic-comparison"><FeatureEmpty icon="compare" title="Dynamic comparison unavailable" text="Daily prices could not be loaded from the backend." /></section>;
   }
   if (annualElectricity <= 0) {
-    return <section className="dynamic-comparison"><FeatureEmpty icon="compare" title="Verbrauchsdaten fehlen" text="Erfasse Verbrauchsdaten, damit ein repräsentativer Tag simuliert werden kann." /></section>;
+    return <section className="dynamic-comparison"><FeatureEmpty icon="compare" title="Consumption data missing" text="Record consumption data to simulate a representative day." /></section>;
   }
   if (!comparison) {
-    return <section className="dynamic-comparison"><FeatureEmpty icon="compare" title="Tagespreise unvollständig" text="Synchronisiere das Backend erneut, damit alle Stunden des Tages verfügbar sind." /></section>;
+    return <section className="dynamic-comparison"><FeatureEmpty icon="compare" title="Daily prices incomplete" text="Synchronise the backend again so that all hours of the day are available." /></section>;
   }
 
   const reference = comparison.fixedCosts.find((entry) => entry.tariff.isCurrent)
@@ -299,42 +299,42 @@ function DynamicDayComparison({ tariffs, annualElectricity, consumption }: { tar
   return (
     <section className="dynamic-comparison">
       <div className="dynamic-comparison-heading">
-        <div><p className="eyebrow">Live-PoC</p><h3>Dynamischer Tagesvergleich</h3><p>Gleicher Verbrauch, heutige deutsche Börsenpreise und automatisch verschobene flexible Geräte.</p></div>
-        <span>{decimal.format(comparison.dailyConsumptionKwh)} kWh/Tag</span>
+        <div><p className="eyebrow">Live PoC</p><h3>Dynamic daily comparison</h3><p>Same consumption, today's German wholesale prices and automatically shifted flexible appliances.</p></div>
+        <span>{decimal.format(comparison.dailyConsumptionKwh)} kWh/day</span>
       </div>
 
       <div className="dynamic-cost-grid">
-        {reference && <DynamicCostCard label="Gespeicherter Fix-Tarif" name={reference.tariff.name} cost={reference.costEur} note={`${(reference.tariff.unitPrice * 100).toFixed(2).replace(".", ",")} ct/kWh inkl. Grundpreis`} />}
-        <DynamicCostCard label="Dynamischer Tarif" name="Ohne Verschieben" cost={comparison.dynamicBeforeEur} note="Typische Nutzungszeiten" />
-        <DynamicCostCard label="Dynamischer Tarif" name="Optimierter Betrieb" cost={comparison.dynamicOptimizedEur} note={shiftSaving > 0.001 ? `${euro.format(shiftSaving)} pro Tag durch Verschieben` : "Heute kein zusätzliches Verschiebepotenzial"} best />
+        {reference && <DynamicCostCard label="Saved fixed tariff" name={reference.tariff.name} cost={reference.costEur} note={`${(reference.tariff.unitPrice * 100).toFixed(2)} ct/kWh incl. base charge`} />}
+        <DynamicCostCard label="Dynamic tariff" name="Without shifting" cost={comparison.dynamicBeforeEur} note="Typical usage times" />
+        <DynamicCostCard label="Dynamic tariff" name="Optimised operation" cost={comparison.dynamicOptimizedEur} note={shiftSaving > 0.001 ? `${euro.format(shiftSaving)} per day from shifting` : "No additional shifting potential today"} best />
       </div>
 
       <div className="hourly-simulation">
-        <div className="hourly-simulation-heading"><strong>Preisverlauf &amp; optimierte Laufzeiten</strong><span>{minPrice.toFixed(1).replace(".", ",")}–{maxPrice.toFixed(1).replace(".", ",")} ct/kWh</span></div>
-        <div className="hourly-price-bars" role="img" aria-label="Stündliche Gesamtpreise; grüne Balken markieren optimierte Gerätelaufzeiten">
+        <div className="hourly-simulation-heading"><strong>Price trend &amp; optimised runtimes</strong><span>{minPrice.toFixed(1)}–{maxPrice.toFixed(1)} ct/kWh</span></div>
+        <div className="hourly-price-bars" role="img" aria-label="Hourly total prices; green bars mark optimised appliance runtimes">
           {comparison.hourly.map((hour, index) => {
             const height = 22 + (hour.totalPriceCentKwh - minPrice) / priceRange * 78;
             const flexible = hour.optimizedFlexibleLoadKwh > 0;
-            return <span className={flexible ? "flexible" : ""} key={hour.timestamp} title={`${new Date(hour.timestamp * 1000).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}: ${hour.totalPriceCentKwh.toFixed(2)} ct/kWh · ${hour.optimizedLoadKwh.toFixed(2)} kWh`}><i style={{ height: `${height}%` }} /><small>{index % 3 === 0 ? `${new Date(hour.timestamp * 1000).getHours()} Uhr` : ""}</small></span>;
+            return <span className={flexible ? "flexible" : ""} key={hour.timestamp} title={`${new Date(hour.timestamp * 1000).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}: ${hour.totalPriceCentKwh.toFixed(2)} ct/kWh · ${hour.optimizedLoadKwh.toFixed(2)} kWh`}><i style={{ height: `${height}%` }} /><small>{index % 3 === 0 ? `${new Date(hour.timestamp * 1000).getHours()}:00` : ""}</small></span>;
           })}
         </div>
       </div>
 
       <div className="shifted-device-list">
-        <strong>Automatisch verschobene Geräte</strong>
+        <strong>Automatically shifted appliances</strong>
         {comparison.shiftedDevices.length === 0
-          ? <p>In den erfassten Daten wurden noch keine flexibel verschiebbaren Geräte erkannt.</p>
-          : comparison.shiftedDevices.map((device) => <div key={device.id}><span><Icon name="clock" size={16} /><strong>{device.name}</strong></span><span>{String(device.previousStartHour).padStart(2, "0")}:00 → {String(device.optimizedStartHour).padStart(2, "0")}:00<small>{decimal.format(device.energyKwh)} kWh · {device.durationHours} Std.</small></span></div>)}
+          ? <p>No flexibly shiftable appliances have been identified in the recorded data yet.</p>
+          : comparison.shiftedDevices.map((device) => <div key={device.id}><span><Icon name="clock" size={16} /><strong>{device.name}</strong></span><span>{String(device.previousStartHour).padStart(2, "0")}:00 → {String(device.optimizedStartHour).padStart(2, "0")}:00<small>{decimal.format(device.energyKwh)} kWh · {device.durationHours} hrs</small></span></div>)}
       </div>
 
-      <p className="dynamic-assumptions"><Icon name="alert" size={14} /> Modellrechnung: synthetisches Haushaltsprofil, Ø Tagesverbrauch aus der Jahreshochrechnung, {priceSurchargeCentKwh.toFixed(2).replace(".", ",")} ct/kWh variable Aufschläge und {euro.format(dynamicBasePriceMonthly)} dynamischer Grundpreis pro Monat. {comparison.estimatedPriceHours > 0 && `${comparison.estimatedPriceHours} fehlende Preisstunden wurden mit dem Mittel der verfügbaren API-Werte ergänzt. `}{referenceSaving !== null && `Gegenüber dem Referenztarif ergibt das heute ${referenceSaving >= 0 ? "eine Ersparnis von" : "Mehrkosten von"} ${euro.format(Math.abs(referenceSaving))}.`}</p>
+      <p className="dynamic-assumptions"><Icon name="alert" size={14} /> Model calculation: synthetic household profile, average daily consumption from the annual projection, {priceSurchargeCentKwh.toFixed(2)} ct/kWh variable surcharges and a {euro.format(dynamicBasePriceMonthly)} dynamic base charge per month. {comparison.estimatedPriceHours > 0 && `${comparison.estimatedPriceHours} missing price hours were filled with the average of the available API values. `}{referenceSaving !== null && `Compared with the reference tariff, this results in ${referenceSaving >= 0 ? "savings of" : "additional costs of"} ${euro.format(Math.abs(referenceSaving))} today.`}</p>
     </section>
   );
 }
 
 /** Kostenkarte für einen simulierten Tarif am repräsentativen Tag. */
 function DynamicCostCard({ label, name, cost, note, best = false }: { label: string; name: string; cost: number; note: string; best?: boolean }) {
-  return <article className={best ? "dynamic-cost-card best" : "dynamic-cost-card"}><small>{label}</small><strong>{name}</strong><em>{euro.format(cost)}<small>für diesen Tag</small></em><p>{note}</p></article>;
+  return <article className={best ? "dynamic-cost-card best" : "dynamic-cost-card"}><small>{label}</small><strong>{name}</strong><em>{euro.format(cost)}<small>for this day</small></em><p>{note}</p></article>;
 }
 
 /** Wiederverwendbarer Leerzustand für noch nicht nutzbare Tariffunktionen. */

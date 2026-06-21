@@ -33,8 +33,9 @@ appliances (fridge, freezer) use the length of a representative high-draw period
 - "confidence": how sure you are the appliance and numbers are right ("low" | "medium" | "high").
 - "note": one short sentence for the user, e.g. what you recognised or what to double-check.
 
-Base the numbers on typical German household appliances. If the image does not clearly show \
-an appliance, set confidence to "low", give your best guess, and say so in the note."""
+Base the numbers on typical German household appliances. Respond entirely in English. If the \
+image does not clearly show an appliance, set confidence to "low", give your best guess, and \
+say so in the note."""
 
 
 async def estimate_appliance_from_photo(image_bytes: bytes, media_type: str) -> ApplianceEstimate:

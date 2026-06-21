@@ -15,8 +15,8 @@ import {
 
 type Period = "6" | "12" | "all";
 
-const decimal = new Intl.NumberFormat("de-DE", { maximumFractionDigits: 1 });
-const euro = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" });
+const decimal = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 });
+const euro = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR" });
 const benchmarks: Record<string, number> = {
   "1": 1800,
   "2": 2700,
@@ -45,59 +45,59 @@ export default function AnalysisPage() {
     <main className="page-content analysis-page">
       <div className="page-heading heading-row">
         <div>
-          <p className="eyebrow">Verbrauchsanalyse</p>
-          <h1>Was deine Daten erzählen</h1>
-          <p className="subtitle">Entwicklungen erkennen, Verbrauchstreiber verstehen und Kosten vorausplanen.</p>
+          <p className="eyebrow">Consumption analysis</p>
+          <h1>What your data reveals</h1>
+          <p className="subtitle">Identify trends, understand consumption drivers and plan future costs.</p>
         </div>
-        <div className="period-control" aria-label="Analysezeitraum">
-          <button className={period === "6" ? "active" : ""} type="button" onClick={() => setPeriod("6")}>6 Mon.</button>
-          <button className={period === "12" ? "active" : ""} type="button" onClick={() => setPeriod("12")}>12 Mon.</button>
-          <button className={period === "all" ? "active" : ""} type="button" onClick={() => setPeriod("all")}>Gesamt</button>
+        <div className="period-control" aria-label="Analysis period">
+          <button className={period === "6" ? "active" : ""} type="button" onClick={() => setPeriod("6")}>6 mo.</button>
+          <button className={period === "12" ? "active" : ""} type="button" onClick={() => setPeriod("12")}>12 mo.</button>
+          <button className={period === "all" ? "active" : ""} type="button" onClick={() => setPeriod("all")}>All</button>
         </div>
       </div>
 
       <div className="stats-grid analysis-stats">
-        <AnalysisStat icon="chart" label="Jahreshochrechnung" value={annual ? `${decimal.format(annual)} kWh` : "Keine Daten"} note="auf Basis deiner Eingaben" />
-        <AnalysisStat icon="trend" label="Monatsdurchschnitt" value={monthlyAverage ? `${decimal.format(monthlyAverage)} kWh` : "–"} note={change === null ? "noch kein Monatsvergleich" : `${change >= 0 ? "+" : ""}${decimal.format(change)} % zum Vormonat`} trend={change} />
-        <AnalysisStat icon="calculator" label="Kostenprognose" value={currentTariff && annual ? euro.format(forecastCost) : "Tarif fehlt"} note="für die nächsten 12 Monate" />
+        <AnalysisStat icon="chart" label="Annual projection" value={annual ? `${decimal.format(annual)} kWh` : "No data"} note="based on your entries" />
+        <AnalysisStat icon="trend" label="Monthly average" value={monthlyAverage ? `${decimal.format(monthlyAverage)} kWh` : "–"} note={change === null ? "no monthly comparison yet" : `${change >= 0 ? "+" : ""}${decimal.format(change)}% vs previous month`} trend={change} />
+        <AnalysisStat icon="calculator" label="Cost forecast" value={currentTariff && annual ? euro.format(forecastCost) : "Tariff missing"} note="for the next 12 months" />
       </div>
 
       <section className="analysis-card consumption-development">
         <div className="analysis-card-heading">
-          <div><p className="eyebrow">FA-13</p><h2>Verbrauchsentwicklung</h2></div>
-          {series.length > 0 && <span className="source-chip">{series.every((point) => point.estimated) ? "Geräteschätzung" : "Erfasste Verbräuche"}</span>}
+          <div><p className="eyebrow"></p><h2>Consumption trend</h2></div>
+          {series.length > 0 && <span className="source-chip">{series.every((point) => point.estimated) ? "Appliance estimate" : "Recorded consumption"}</span>}
         </div>
         {visibleSeries.length === 0
-          ? <AnalysisEmpty title="Noch keine analysierbaren Verbrauchsdaten" text="Für die Entwicklung werden zwei Zählerstände, eine Rechnung oder eine Geräteschätzung benötigt." />
+          ? <AnalysisEmpty title="No analysable consumption data yet" text="Two meter readings, an invoice or an appliance estimate are required to show a trend." />
           : <ConsumptionChart points={visibleSeries} />}
       </section>
 
       <div className="analysis-two-column">
         <section className="analysis-card">
-          <div className="analysis-card-heading"><div><p className="eyebrow">FA-14</p><h2>Verbrauchsschwerpunkte</h2></div><Icon name="hotspot" /></div>
+          <div className="analysis-card-heading"><div><p className="eyebrow"></p><h2>Consumption hotspots</h2></div><Icon name="hotspot" /></div>
           <Hotspots appliances={consumption.data.applianceEstimates} />
         </section>
 
         <section className="analysis-card">
-          <div className="analysis-card-heading"><div><p className="eyebrow">FA-15</p><h2>Haushaltsvergleich</h2></div><Icon name="compare" /></div>
+          <div className="analysis-card-heading"><div><p className="eyebrow"></p><h2>Household comparison</h2></div><Icon name="compare" /></div>
           <Benchmark annual={annual} householdSize={householdSize} onHouseholdSize={setHouseholdSize} />
         </section>
       </div>
 
       <section className="analysis-card anomaly-card">
-        <div className="analysis-card-heading"><div><p className="eyebrow">FA-16</p><h2>Auffällige Verbrauchsmuster</h2></div><Icon name="alert" /></div>
+        <div className="analysis-card-heading"><div><p className="eyebrow"></p><h2>Unusual consumption patterns</h2></div><Icon name="alert" /></div>
         <AnomalyState anomaly={anomaly} hasEnoughData={series.length >= 4} />
       </section>
 
       <section className="analysis-card forecast-card">
         <div className="analysis-card-heading">
-          <div><p className="eyebrow">FA-17</p><h2>Kostenprognose</h2></div>
-          {currentTariff && <span className="source-chip">Tarif: {currentTariff.name}</span>}
+          <div><p className="eyebrow"></p><h2>Cost forecast</h2></div>
+          {currentTariff && <span className="source-chip">Tariff: {currentTariff.name}</span>}
         </div>
         {!currentTariff
-          ? <AnalysisEmpty title="Kein aktiver Stromtarif" text="Lege unter „Tarife & Kosten“ einen aktuellen Tarif fest, um deine Kosten zu prognostizieren." />
+          ? <AnalysisEmpty title="No active electricity tariff" text="Set a current tariff under “Tariffs & Costs” to forecast your costs." />
           : forecast.length === 0
-            ? <AnalysisEmpty title="Keine Verbrauchsgrundlage" text="Sobald Verbrauchsdaten vorliegen, erscheint hier deine 12-Monats-Prognose." />
+            ? <AnalysisEmpty title="No consumption baseline" text="Your 12-month forecast will appear here once consumption data is available." />
             : <ForecastChart points={forecast} total={forecastCost} />}
       </section>
     </main>
@@ -119,7 +119,7 @@ function ConsumptionChart({ points }: { points: MonthlyPoint[] }) {
   const max = Math.max(...points.map((point) => point.consumption), 1);
   return (
     <div className="chart-wrap">
-      <div className="bar-chart" role="img" aria-label="Monatliche Verbrauchsentwicklung">
+      <div className="bar-chart" role="img" aria-label="Monthly consumption trend">
         {points.map((point) => {
           const height = Math.max(4, point.consumption / max * 100);
           return (
@@ -131,7 +131,7 @@ function ConsumptionChart({ points }: { points: MonthlyPoint[] }) {
           );
         })}
       </div>
-      <div className="chart-unit">kWh pro Monat</div>
+      <div className="chart-unit">kWh per month</div>
     </div>
   );
 }
@@ -140,7 +140,7 @@ function ConsumptionChart({ points }: { points: MonthlyPoint[] }) {
 function Hotspots({ appliances }: { appliances: ApplianceEstimate[] }) {
   const sorted = [...appliances].sort((a, b) => b.annualConsumptionKwh - a.annualConsumptionKwh);
   const total = sorted.reduce((sum, item) => sum + item.annualConsumptionKwh, 0);
-  if (sorted.length === 0) return <AnalysisEmpty title="Noch keine Geräte erfasst" text="Geräteschätzungen zeigen dir hier die größten Verbrauchstreiber." compact />;
+  if (sorted.length === 0) return <AnalysisEmpty title="No appliances recorded yet" text="Appliance estimates show your biggest consumption drivers here." compact />;
 
   return (
     <div className="hotspot-list">
@@ -149,7 +149,7 @@ function Hotspots({ appliances }: { appliances: ApplianceEstimate[] }) {
         return <div className="hotspot-row" key={appliance.id}>
           <span className="hotspot-rank">{index + 1}</span>
           <span className="hotspot-main"><strong>{appliance.applianceName}</strong><span><i style={{ width: `${share}%` }} /></span></span>
-          <span className="hotspot-value"><strong>{decimal.format(appliance.annualConsumptionKwh)} kWh</strong><small>{decimal.format(share)} %</small></span>
+          <span className="hotspot-value"><strong>{decimal.format(appliance.annualConsumptionKwh)} kWh</strong><small>{decimal.format(share)}%</small></span>
         </div>;
       })}
     </div>
@@ -163,23 +163,23 @@ function Benchmark({ annual, householdSize, onHouseholdSize }: { annual: number;
   const marker = Math.min(100, Math.max(2, annual / (reference * 1.6) * 100));
   return (
     <div className="benchmark">
-      <label>Vergleichshaushalt<select value={householdSize} onChange={(event) => onHouseholdSize(event.target.value)}>{Object.keys(benchmarks).map((size) => <option key={size} value={size}>{size === "5" ? "5+" : size} {size === "1" ? "Person" : "Personen"}</option>)}</select></label>
-      {annual === 0 ? <p className="inline-empty">Für den Vergleich fehlen noch Verbrauchsdaten.</p> : <>
-        <div className="benchmark-summary"><span>Deine Hochrechnung<strong>{decimal.format(annual)} kWh/Jahr</strong></span><span>Orientierungswert<strong>{decimal.format(reference)} kWh/Jahr</strong></span></div>
+      <label>Comparison household<select value={householdSize} onChange={(event) => onHouseholdSize(event.target.value)}>{Object.keys(benchmarks).map((size) => <option key={size} value={size}>{size === "5" ? "5+" : size} {size === "1" ? "person" : "people"}</option>)}</select></label>
+      {annual === 0 ? <p className="inline-empty">Consumption data is still missing for this comparison.</p> : <>
+        <div className="benchmark-summary"><span>Your projection<strong>{decimal.format(annual)} kWh/year</strong></span><span>Reference value<strong>{decimal.format(reference)} kWh/year</strong></span></div>
         <div className="benchmark-scale"><span style={{ left: `${marker}%` }} /><i /></div>
-        <p className={difference > 0 ? "benchmark-result above" : "benchmark-result"}>{difference > 0 ? `${decimal.format(Math.abs(difference))} % über` : `${decimal.format(Math.abs(difference))} % unter`} dem Orientierungswert.</p>
+        <p className={difference > 0 ? "benchmark-result above" : "benchmark-result"}>{difference > 0 ? `${decimal.format(Math.abs(difference))}% above` : `${decimal.format(Math.abs(difference))}% below`} the reference value.</p>
       </>}
-      <small className="benchmark-note">Unverbindlicher Richtwert; elektrische Heizsysteme und Gebäudeart können den Vergleich deutlich verändern.</small>
+      <small className="benchmark-note">Non-binding reference; electric heating systems and building type can significantly affect the comparison.</small>
     </div>
   );
 }
 
 /** Rendert je nach Datenlage einen neutralen, positiven oder warnenden Anomaliestatus. */
 function AnomalyState({ anomaly, hasEnoughData }: { anomaly: ReturnType<typeof findAnomaly>; hasEnoughData: boolean }) {
-  if (!hasEnoughData) return <div className="anomaly-state neutral"><span className="icon-tile"><Icon name="alert" /></span><span><strong>Noch nicht genügend Vergleichsdaten</strong><p>Für eine robuste Erkennung werden mindestens vier Monatswerte benötigt.</p></span></div>;
-  if (!anomaly) return <div className="anomaly-state good"><span className="icon-tile"><Icon name="check" /></span><span><strong>Keine ungewöhnlichen Veränderungen erkannt</strong><p>Der letzte Monatswert liegt innerhalb der üblichen Schwankungsbreite.</p></span></div>;
+  if (!hasEnoughData) return <div className="anomaly-state neutral"><span className="icon-tile"><Icon name="alert" /></span><span><strong>Not enough comparison data yet</strong><p>At least four monthly values are required for reliable detection.</p></span></div>;
+  if (!anomaly) return <div className="anomaly-state good"><span className="icon-tile"><Icon name="check" /></span><span><strong>No unusual changes detected</strong><p>The latest monthly value is within the usual range of fluctuation.</p></span></div>;
   const rising = anomaly.deviation > 0;
-  return <div className="anomaly-state warning"><span className="icon-tile"><Icon name="alert" /></span><span><strong>{rising ? "Ungewöhnlich hoher" : "Ungewöhnlich niedriger"} Verbrauch im {anomaly.point.label}</strong><p>{decimal.format(Math.abs(anomaly.deviation))} % {rising ? "über" : "unter"} dem Durchschnitt der drei Vormonate. Prüfe besondere Ereignisse oder fehlerhafte Eingaben.</p></span></div>;
+  return <div className="anomaly-state warning"><span className="icon-tile"><Icon name="alert" /></span><span><strong>{rising ? "Unusually high" : "Unusually low"} consumption in {anomaly.point.label}</strong><p>{decimal.format(Math.abs(anomaly.deviation))}% {rising ? "above" : "below"} the average of the previous three months. Check for unusual events or incorrect entries.</p></span></div>;
 }
 
 type ForecastPoint = ReturnType<typeof buildForecast>[number];
@@ -189,8 +189,8 @@ function ForecastChart({ points, total }: { points: ForecastPoint[]; total: numb
   const max = Math.max(...points.map((point) => point.cost), 1);
   return (
     <div className="forecast-layout">
-      <div className="forecast-summary"><small>Voraussichtliche Kosten</small><strong>{euro.format(total)}</strong><span>nächste 12 Monate</span><p>Basierend auf deinem bisherigen Verbrauch und dem aktuellen Tarif.</p></div>
-      <div className="forecast-chart" role="img" aria-label="Prognostizierte monatliche Kosten">
+      <div className="forecast-summary"><small>Expected cost</small><strong>{euro.format(total)}</strong><span>next 12 months</span><p>Based on your previous consumption and current tariff.</p></div>
+      <div className="forecast-chart" role="img" aria-label="Forecast monthly costs">
         {points.map((point) => <div className="forecast-column" key={point.key}><strong>{euro.format(point.cost)}</strong><span><i style={{ height: `${Math.max(6, point.cost / max * 100)}%` }} /></span><small>{point.label}</small></div>)}
       </div>
     </div>

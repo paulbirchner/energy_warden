@@ -29,10 +29,10 @@ Inspect the image and return a conservative estimate suitable for an energy-cons
 
 Rules:
 - Set recognized=false when no electrical appliance can be identified reliably.
-- Use a short, common German appliance name. Do not invent a brand or exact model.
+- Use a short, common English appliance name. Do not invent a brand or exact model.
 - Estimate typical active power in watts, typical active-use hours per day, and days per week.
 - If a readable energy label or nameplate is visible, prefer it; otherwise use a typical value.
-- Keep the German explanation to one short sentence and clearly state that values are estimates.
+- Keep the English explanation to one short sentence and clearly state that values are estimates.
 - Never claim that an exact device specification was read unless it is actually visible."""
 
 
@@ -41,12 +41,12 @@ async def recognize_device(request: DeviceImageRequest) -> DeviceRecognition:
     try:
         image_bytes = base64.b64decode(request.image_base64, validate=True)
     except (binascii.Error, ValueError) as error:
-        raise ValueError("Das Bild ist nicht korrekt kodiert.") from error
+        raise ValueError("The image is not encoded correctly.") from error
 
     if not image_bytes:
-        raise ValueError("Das Bild ist leer.")
+        raise ValueError("The image is empty.")
     if len(image_bytes) > MAX_IMAGE_BYTES:
-        raise ValueError("Das Bild darf höchstens 5 MB groß sein.")
+        raise ValueError("The image must not exceed 5 MB.")
 
     client = AsyncAnthropic()
     response = await client.messages.parse(
@@ -67,7 +67,7 @@ async def recognize_device(request: DeviceImageRequest) -> DeviceRecognition:
                     },
                     {
                         "type": "text",
-                        "text": "Erkenne das elektrische Gerät und schätze typische Verbrauchswerte.",
+                        "text": "Identify the electrical appliance and estimate typical consumption values.",
                     },
                 ],
             }

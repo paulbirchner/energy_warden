@@ -13,8 +13,8 @@ type DashboardDestination = "consumption" | "tariffs" | "analysis" | "recommenda
 type DashboardProps = { onNavigate: (page: DashboardDestination) => void };
 type ChartMode = "consumption" | "cost";
 
-const decimal = new Intl.NumberFormat("de-DE", { maximumFractionDigits: 1 });
-const euro = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" });
+const decimal = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 });
+const euro = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR" });
 
 /**
  * Zentrale Übersicht über Verbrauch, Kosten, Preise, Hotspots und Maßnahmenfortschritt.
@@ -50,26 +50,26 @@ export default function DashboardPage({ onNavigate }: DashboardProps) {
       <div className="page-heading dashboard-heading">
         <div>
           <p className="eyebrow">Dashboard</p>
-          <h1>{getGreeting()}, willkommen beim Energy Warden</h1>
-          <p className="subtitle">Dein Energiehaushalt im Überblick · {new Intl.DateTimeFormat("de-DE", { dateStyle: "long" }).format(new Date())}</p>
+          <h1>{getGreeting()}, welcome to Energy Warden</h1>
+          <p className="subtitle">Your household energy at a glance · {new Intl.DateTimeFormat("en-GB", { dateStyle: "long" }).format(new Date())}</p>
         </div>
         <div className="dashboard-quick-actions">
-          <button type="button" onClick={() => onNavigate("consumption")}><Icon name="meter" size={17} /> Zählerstand</button>
-          <button type="button" onClick={() => onNavigate("recommendations")}><Icon name="recommendation" size={17} /> Maßnahmen</button>
+          <button type="button" onClick={() => onNavigate("consumption")}><Icon name="meter" size={17} /> Meter reading</button>
+          <button type="button" onClick={() => onNavigate("recommendations")}><Icon name="recommendation" size={17} /> Actions</button>
         </div>
       </div>
 
       <div className="dashboard-kpis">
-        <DashboardKpi icon="chart" label="Verbrauch letzter Monat" value={currentMonth ? `${decimal.format(currentMonth)} kWh` : "Noch keine Daten"} detail={previousChange === null ? "Vergleich folgt mit weiteren Werten" : `${previousChange >= 0 ? "+" : ""}${decimal.format(previousChange)} % zum Vormonat`} tone={previousChange !== null && previousChange > 0 ? "warning" : "green"} />
-        <DashboardKpi icon="calculator" label="Kosten letzter Monat" value={monthlyCost === null ? "Tarif fehlt" : euro.format(monthlyCost)} detail={currentTariff ? `mit ${currentTariff.name}` : "Tarif für Berechnung erfassen"} tone="blue" />
-        <DashboardKpi icon="savings" label="Offenes Einsparpotenzial" value={euro.format(openSavings)} detail="Summe pro Jahr" tone="gold" />
-        <DashboardKpi icon="check" label="Erreichte Einsparung" value={euro.format(completedSavings / 12)} detail="geschätzt pro Monat" tone="green" />
+        <DashboardKpi icon="chart" label="Consumption last month" value={currentMonth ? `${decimal.format(currentMonth)} kWh` : "No data yet"} detail={previousChange === null ? "A comparison will appear with more data" : `${previousChange >= 0 ? "+" : ""}${decimal.format(previousChange)}% vs previous month`} tone={previousChange !== null && previousChange > 0 ? "warning" : "green"} />
+        <DashboardKpi icon="calculator" label="Cost last month" value={monthlyCost === null ? "Tariff missing" : euro.format(monthlyCost)} detail={currentTariff ? `with ${currentTariff.name}` : "Add a tariff to calculate costs"} tone="blue" />
+        <DashboardKpi icon="savings" label="Open savings potential" value={euro.format(openSavings)} detail="Total per year" tone="gold" />
+        <DashboardKpi icon="check" label="Savings achieved" value={euro.format(completedSavings / 12)} detail="estimated per month" tone="green" />
       </div>
 
       <div className="dashboard-main-grid">
         <section className="dashboard-card dashboard-trend-card">
           <div className="dashboard-card-heading">
-            <div><p className="eyebrow">FA-28</p><h2>Entwicklung</h2></div>
+            <div><p className="eyebrow"></p><h2>Trend</h2></div>
           </div>
           <DashboardChart points={series.slice(-12)} tariff={currentTariff} />
         </section>
@@ -77,25 +77,25 @@ export default function DashboardPage({ onNavigate }: DashboardProps) {
         <div className="dashboard-side-column">
           <LivePriceWidget />
           <section className="dashboard-card dashboard-recommendation-preview">
-            <div className="dashboard-card-heading"><div><p className="eyebrow">Nächste Schritte</p><h2>Top-Empfehlungen</h2></div><button className="card-link" type="button" onClick={() => onNavigate("recommendations")}>Alle</button></div>
+            <div className="dashboard-card-heading"><div><p className="eyebrow">Next steps</p><h2>Top recommendations</h2></div><button className="card-link" type="button" onClick={() => onNavigate("recommendations")}>View all</button></div>
             {openRecommendations.length === 0
-              ? <DashboardEmpty title="Alles erledigt" text="Aktuell sind keine Maßnahmen offen." />
+              ? <DashboardEmpty title="All done" text="There are currently no open actions." />
               : <div className="dashboard-tip-list">{openRecommendations.slice(0, 3).map((item) => <DashboardTip key={item.id} recommendation={item} />)}</div>}
           </section>
         </div>
 
         <section className="dashboard-card dashboard-hotspots">
-          <div className="dashboard-card-heading"><div><p className="eyebrow">FA-29</p><h2>Energie-Hotspots</h2></div><button className="card-link" type="button" onClick={() => onNavigate("analysis")}>Analyse öffnen</button></div>
+          <div className="dashboard-card-heading"><div><p className="eyebrow"></p><h2>Energy hotspots</h2></div><button className="card-link" type="button" onClick={() => onNavigate("analysis")}>Open analysis</button></div>
           <DashboardHotspots appliances={consumptionStore.data.applianceEstimates} />
         </section>
 
         <section className="dashboard-card dashboard-savings-card">
-          <div className="dashboard-card-heading"><div><p className="eyebrow">FA-30</p><h2>Erreichte Einsparungen</h2></div><Icon name="leaf" /></div>
+          <div className="dashboard-card-heading"><div><p className="eyebrow"></p><h2>Savings achieved</h2></div><Icon name="leaf" /></div>
           <AchievedSavings completed={completedRecommendations} total={recommendations.length} onNavigate={() => onNavigate("recommendations")} />
         </section>
       </div>
 
-      <p className="dashboard-data-note"><Icon name="check" size={14} /> Alle Kennzahlen werden aus deinen lokal gespeicherten Eingaben berechnet.</p>
+      <p className="dashboard-data-note"><Icon name="check" size={14} /> All figures are calculated from your locally stored entries.</p>
     </main>
   );
 }
@@ -103,9 +103,9 @@ export default function DashboardPage({ onNavigate }: DashboardProps) {
 /** Wählt abhängig von der lokalen Uhrzeit eine passende Begrüßung. */
 function getGreeting() {
   const hour = new Date().getHours();
-  if (hour < 11) return "Guten Morgen";
-  if (hour < 18) return "Guten Tag";
-  return "Guten Abend";
+  if (hour < 11) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
 }
 
 /** Kompakte Dashboard-Kennzahl mit thematischem Farbton. */
@@ -124,17 +124,17 @@ function DashboardChart({ points, tariff }: { points: ReturnType<typeof buildMon
 
   return <div>
     <div className="dashboard-chart-controls">
-      <div className="dashboard-chart-toggle"><button className={mode === "consumption" ? "active" : ""} type="button" onClick={() => setMode("consumption")}>Verbrauch</button><button className={mode === "cost" ? "active" : ""} type="button" disabled={!tariff} onClick={() => setMode("cost")}>Kosten</button></div>
-      <span>{points.length ? `${points.length} Monatswerte` : "Noch keine Monatswerte"}</span>
+      <div className="dashboard-chart-toggle"><button className={mode === "consumption" ? "active" : ""} type="button" onClick={() => setMode("consumption")}>Consumption</button><button className={mode === "cost" ? "active" : ""} type="button" disabled={!tariff} onClick={() => setMode("cost")}>Cost</button></div>
+      <span>{points.length ? `${points.length} monthly values` : "No monthly values yet"}</span>
     </div>
-    {points.length === 0 ? <DashboardEmpty title="Noch keine Entwicklung sichtbar" text="Erfasse zwei Zählerstände, eine Rechnung oder eine Geräteschätzung." /> :
-      <div className="dashboard-chart" role="img" aria-label={mode === "consumption" ? "Monatlicher Stromverbrauch" : "Monatliche Stromkosten"}>
+    {points.length === 0 ? <DashboardEmpty title="No trend visible yet" text="Record two meter readings, an invoice or an appliance estimate." /> :
+      <div className="dashboard-chart" role="img" aria-label={mode === "consumption" ? "Monthly electricity consumption" : "Monthly electricity costs"}>
         {points.map((point, index) => {
           const value = values[index];
           return <div className="dashboard-chart-column" key={point.key}><strong>{mode === "consumption" ? `${decimal.format(value)}` : euro.format(value)}</strong><span><i style={{ height: `${Math.max(5, value / max * 100)}%` } as CSSProperties} /></span><small>{point.label}</small></div>;
         })}
       </div>}
-    <div className="dashboard-chart-legend"><span><i /> {mode === "consumption" ? "Verbrauch in kWh" : "Kosten in Euro"}</span>{points.every((point) => point.estimated) && points.length > 0 && <em>Aus Geräteschätzungen</em>}</div>
+    <div className="dashboard-chart-legend"><span><i /> {mode === "consumption" ? "Consumption in kWh" : "Cost in euros"}</span>{points.every((point) => point.estimated) && points.length > 0 && <em>From appliance estimates</em>}</div>
   </div>;
 }
 
@@ -146,21 +146,21 @@ function LivePriceWidget() {
     getCurrentPrice().then((value) => { setPrice(value); setStatus("ready"); }).catch(() => setStatus("error"));
   }, []);
   const cent = price === null ? null : estimatedHouseholdPriceCentKwh(price);
-  return <section className="dashboard-live-price"><div><span className="live-dot" /><p>Geschätzter Gesamtpreis jetzt</p></div>{status === "loading" && <strong>Wird geladen …</strong>}{status === "error" && <><strong>Nicht erreichbar</strong><small>Backend-Preisschnittstelle offline</small></>}{status === "ready" && cent !== null && price !== null && <><strong>{cent.toFixed(2).replace(".", ",")} ct/kWh</strong><small>Börsenanteil {formatCentKwh(price)} · ohne Grundpreis</small></>}</section>;
+  return <section className="dashboard-live-price"><div><span className="live-dot" /><p>Estimated total price now</p></div>{status === "loading" && <strong>Loading…</strong>}{status === "error" && <><strong>Unavailable</strong><small>Backend price interface offline</small></>}{status === "ready" && cent !== null && price !== null && <><strong>{cent.toFixed(2)} ct/kWh</strong><small>Wholesale component {formatCentKwh(price)} · excluding base charge</small></>}</section>;
 }
 
 /** Kurze Vorschau einer noch offenen persönlichen Maßnahme. */
 function DashboardTip({ recommendation }: { recommendation: LocalRecommendation }) {
-  return <div className="dashboard-tip"><span className={`tip-priority ${recommendation.priority}`} /><span><strong>{recommendation.title}</strong><small>{recommendation.annualSavingsEur > 0 ? `bis ${euro.format(recommendation.annualSavingsEur)} pro Jahr` : recommendation.effort}</small></span><Icon name="trend" size={16} /></div>;
+  return <div className="dashboard-tip"><span className={`tip-priority ${recommendation.priority}`} /><span><strong>{recommendation.title}</strong><small>{recommendation.annualSavingsEur > 0 ? `up to ${euro.format(recommendation.annualSavingsEur)} per year` : recommendation.effort}</small></span><Icon name="trend" size={16} /></div>;
 }
 
 /** Zeigt die größten Geräteanteile als Donut und Rangliste. */
 function DashboardHotspots({ appliances }: { appliances: ApplianceEstimate[] }) {
   const sorted = [...appliances].sort((a, b) => b.annualConsumptionKwh - a.annualConsumptionKwh);
   const total = sorted.reduce((sum, item) => sum + item.annualConsumptionKwh, 0);
-  if (sorted.length === 0) return <DashboardEmpty title="Noch keine Geräte erfasst" text="Geräteschätzungen machen deine größten Verbrauchstreiber sichtbar." />;
+  if (sorted.length === 0) return <DashboardEmpty title="No appliances recorded yet" text="Appliance estimates reveal your biggest sources of consumption." />;
   const leadingShare = total ? sorted[0].annualConsumptionKwh / total * 100 : 0;
-  return <div className="dashboard-hotspot-layout"><div className="hotspot-donut" style={{ "--donut-share": `${leadingShare * 3.6}deg` } as CSSProperties}><span><strong>{decimal.format(total)}</strong><small>kWh/Jahr</small></span></div><div className="dashboard-hotspot-list">{sorted.slice(0, 4).map((item, index) => { const share = total ? item.annualConsumptionKwh / total * 100 : 0; return <div key={item.id}><span><i style={{ background: `var(--hotspot-${Math.min(index + 1, 4)})` }} />{item.applianceName}</span><strong>{decimal.format(share)} %<small>{decimal.format(item.annualConsumptionKwh)} kWh</small></strong></div>; })}</div></div>;
+  return <div className="dashboard-hotspot-layout"><div className="hotspot-donut" style={{ "--donut-share": `${leadingShare * 3.6}deg` } as CSSProperties}><span><strong>{decimal.format(total)}</strong><small>kWh/year</small></span></div><div className="dashboard-hotspot-list">{sorted.slice(0, 4).map((item, index) => { const share = total ? item.annualConsumptionKwh / total * 100 : 0; return <div key={item.id}><span><i style={{ background: `var(--hotspot-${Math.min(index + 1, 4)})` }} />{item.applianceName}</span><strong>{decimal.format(share)}%<small>{decimal.format(item.annualConsumptionKwh)} kWh</small></strong></div>; })}</div></div>;
 }
 
 /** Fasst die Wirkung bereits als umgesetzt markierter Maßnahmen zusammen. */
@@ -168,7 +168,7 @@ function AchievedSavings({ completed, total, onNavigate }: { completed: LocalRec
   const annualEur = completed.reduce((sum, item) => sum + item.annualSavingsEur, 0);
   const annualKwh = completed.reduce((sum, item) => sum + item.annualSavingsKwh, 0);
   const progress = total ? Math.min(100, completed.length / total * 100) : 0;
-  return <div className="achieved-savings"><div className="savings-progress"><div style={{ "--progress": `${progress * 3.6}deg` } as CSSProperties}><span><strong>{completed.length}</strong><small>umgesetzt</small></span></div></div><div className="savings-copy">{completed.length === 0 ? <><strong>Dein Fortschritt startet hier</strong><p>Markiere eine Empfehlung als umgesetzt, um die erwartete Wirkung zu verfolgen.</p><button className="secondary-button" type="button" onClick={onNavigate}>Maßnahmen ansehen</button></> : <><strong>{euro.format(annualEur / 12)} und {decimal.format(annualKwh / 12)} kWh</strong><p>geschätzte Einsparung pro Monat durch deine umgesetzten Maßnahmen.</p><span>{decimal.format(progress)} % der vorgeschlagenen Maßnahmen umgesetzt</span></>}</div></div>;
+  return <div className="achieved-savings"><div className="savings-progress"><div style={{ "--progress": `${progress * 3.6}deg` } as CSSProperties}><span><strong>{completed.length}</strong><small>completed</small></span></div></div><div className="savings-copy">{completed.length === 0 ? <><strong>Your progress starts here</strong><p>Mark a recommendation as completed to track its expected impact.</p><button className="secondary-button" type="button" onClick={onNavigate}>View actions</button></> : <><strong>{euro.format(annualEur / 12)} and {decimal.format(annualKwh / 12)} kWh</strong><p>estimated savings per month from your completed actions.</p><span>{decimal.format(progress)}% of suggested actions completed</span></>}</div></div>;
 }
 
 /** Platzhalter für Dashboard-Bereiche ohne ausreichende Eingaben. */

@@ -29,38 +29,38 @@ function electricityPrice(data: ConsumptionData, tariffs: Tariff[]) {
  * Gerätegruppen angepasst, bleibt aber vollständig nachvollziehbar und lokal.
  */
 function deviceRecommendation(device: ApplianceEstimate, price: number): LocalRecommendation {
-  const normalizedName = device.applianceName.toLocaleLowerCase("de-DE");
-  let title = `${device.applianceName}: Nutzungszeit gezielt reduzieren`;
+  const normalizedName = device.applianceName.toLocaleLowerCase("en-GB");
+  let title = `${device.applianceName}: reduce usage time`;
   let description: string;
   let savingsKwh: number;
   let steps: string[];
 
-  if (/wasch|spül|trockner/.test(normalizedName)) {
+  if (/wasch|spül|trockner|washer|washing|dishwasher|dryer/.test(normalizedName)) {
     savingsKwh = device.powerWatts / 1000 * device.hoursPerDay * 12;
-    title = `${device.applianceName} besser auslasten`;
-    description = "Bereits ein vermiedener, nur teilweise gefüllter Durchlauf pro Monat senkt Verbrauch und Kosten.";
+    title = `Run ${device.applianceName} more efficiently`;
+    description = "Avoiding just one partially filled cycle per month reduces both consumption and costs.";
     steps = [
-      "Gerät erst bei sinnvoller Beladung starten.",
-      "Eco-Programm nutzen, wenn ausreichend Zeit vorhanden ist.",
-      "Nach einem Monat prüfen, ob zwölf unnötige Läufe pro Jahr realistisch sind.",
+      "Only start the appliance with a sensible load.",
+      "Use the eco programme when there is enough time.",
+      "After one month, check whether avoiding twelve unnecessary cycles per year is realistic.",
     ];
   } else if (/heiz|wärme|heat/.test(normalizedName)) {
     savingsKwh = device.annualConsumptionKwh * 0.05;
-    title = `${device.applianceName} feinjustieren`;
-    description = "Eine kleine Anpassung von Zeitplan und Solltemperatur kann den geschätzten Geräteverbrauch um etwa fünf Prozent reduzieren.";
+    title = `Fine-tune ${device.applianceName}`;
+    description = "A small adjustment to the schedule and target temperature can reduce estimated appliance consumption by around five per cent.";
     steps = [
-      "Zeitplan an tatsächliche Anwesenheitszeiten anpassen.",
-      "Solltemperatur schrittweise statt stark verändern.",
-      "Verbrauch nach vier Wochen mit dem vorherigen Zeitraum vergleichen.",
+      "Adjust the schedule to actual occupancy times.",
+      "Change the target temperature gradually rather than dramatically.",
+      "Compare consumption with the previous period after four weeks.",
     ];
   } else {
     const reducedMinutes = Math.min(30, Math.max(10, Math.round(device.hoursPerDay * 60 * 0.15)));
     savingsKwh = device.powerWatts / 1000 * reducedMinutes / 60 * device.daysPerWeek * 52;
-    description = `Wenn du die Nutzung an ${device.daysPerWeek} Tagen pro Woche um etwa ${reducedMinutes} Minuten verkürzt, sinkt der hochgerechnete Jahresverbrauch.`;
+    description = `Reducing usage by around ${reducedMinutes} minutes on ${device.daysPerWeek} days per week lowers projected annual consumption.`;
     steps = [
-      `Nutzungsdauer zunächst um ${reducedMinutes} Minuten reduzieren.`,
-      "Gerät nach Gebrauch vollständig ausschalten.",
-      "Nach vier Wochen prüfen, ob die Änderung alltagstauglich ist.",
+      `Start by reducing usage by ${reducedMinutes} minutes.`,
+      "Switch the appliance off completely after use.",
+      "After four weeks, check whether the change works in everyday life.",
     ];
   }
 
@@ -74,8 +74,8 @@ function deviceRecommendation(device: ApplianceEstimate, price: number): LocalRe
     description,
     annualSavingsKwh: savingsKwh,
     annualSavingsEur: savingsEur,
-    effort: "Kein Kauf notwendig",
-    basedOn: `${device.annualConsumptionKwh.toFixed(0)} kWh geschätzter Jahresverbrauch`,
+    effort: "No purchase required",
+    basedOn: `${device.annualConsumptionKwh.toFixed(0)} kWh estimated annual consumption`,
     steps,
     noHardware: true,
   };
@@ -104,13 +104,13 @@ export function generateLocalRecommendations(data: ConsumptionData, tariffs: Tar
       category: "behavior",
       priority: priorityFor(savingsEur, savingsKwh),
       feasibility: "easy",
-      title: "Dauerverbrauch konsequent vermeiden",
-      description: "Setze dir eine feste Abendroutine und schalte nicht benötigte Geräte vollständig aus. Als vorsichtiges Ziel werden fünf Prozent deines hochgerechneten Verbrauchs angesetzt.",
+      title: "Consistently avoid standby consumption",
+      description: "Create a fixed evening routine and fully switch off appliances you do not need. Five per cent of your projected consumption is used as a conservative target.",
       annualSavingsKwh: savingsKwh,
       annualSavingsEur: savingsEur,
-      effort: "5 Minuten pro Tag",
-      basedOn: `${annual.toFixed(0)} kWh Jahreshochrechnung`,
-      steps: ["Abends Küche, Arbeitsplatz und Unterhaltungselektronik prüfen.", "Standby-Geräte vollständig ausschalten.", "Routine zwei Wochen lang testen und beibehalten, was funktioniert."],
+      effort: "5 minutes per day",
+      basedOn: `${annual.toFixed(0)} kWh annual projection`,
+      steps: ["Check the kitchen, workspace and entertainment electronics in the evening.", "Switch standby appliances off completely.", "Test the routine for two weeks and keep what works."],
       noHardware: true,
     });
   }
@@ -127,13 +127,13 @@ export function generateLocalRecommendations(data: ConsumptionData, tariffs: Tar
         category: "anomaly",
         priority: "high",
         feasibility: "easy",
-        title: `Verbrauchsanstieg im ${current.label} prüfen`,
-        description: "Der letzte Monatswert liegt deutlich über den drei Vormonaten. Bleibt der Mehrverbrauch bestehen, entstehen vermeidbare Folgekosten.",
+        title: `Review the consumption increase in ${current.label}`,
+        description: "The latest monthly value is significantly above the previous three months. If this additional consumption continues, it will create avoidable costs.",
         annualSavingsKwh: avoidableKwh,
         annualSavingsEur: savingsEur,
-        effort: "Etwa 15 Minuten",
-        basedOn: `${((current.consumption - baseline) / baseline * 100).toFixed(0)} % Abweichung`,
-        steps: ["Neue oder länger genutzte Geräte notieren.", "Zählerstand auf Eingabefehler prüfen.", "Den nächsten Zählerstand früher als üblich erfassen."],
+        effort: "About 15 minutes",
+        basedOn: `${((current.consumption - baseline) / baseline * 100).toFixed(0)}% deviation`,
+        steps: ["Note any new appliances or appliances used for longer.", "Check the meter reading for input errors.", "Record the next meter reading earlier than usual."],
         noHardware: true,
       });
     }
@@ -154,13 +154,13 @@ export function generateLocalRecommendations(data: ConsumptionData, tariffs: Tar
         category: "tariff",
         priority: priorityFor(savingsEur, 0),
         feasibility: "medium",
-        title: `Tarif „${best.tariff.name}“ prüfen`,
-        description: `Bei deinem hochgerechneten Verbrauch ist der gespeicherte Alternativtarif günstiger als „${currentTariff.name}“.` ,
+        title: `Review the “${best.tariff.name}” tariff`,
+        description: `Based on your projected consumption, the saved alternative tariff is cheaper than “${currentTariff.name}”.`,
         annualSavingsKwh: 0,
         annualSavingsEur: savingsEur,
-        effort: "Tarifbedingungen prüfen",
-        basedOn: `${annual.toFixed(0)} kWh und beide gespeicherten Tarife`,
-        steps: ["Laufzeit und Kündigungsfrist des aktuellen Vertrags prüfen.", "Preisgarantie und einmalige Boni vergleichen.", "Erst nach Prüfung aller Vertragsbedingungen wechseln."],
+        effort: "Review tariff terms",
+        basedOn: `${annual.toFixed(0)} kWh and both saved tariffs`,
+        steps: ["Check the term and notice period of the current contract.", "Compare price guarantees and one-off bonuses.", "Only switch after reviewing all contract terms."],
         noHardware: true,
       });
     }
@@ -172,13 +172,13 @@ export function generateLocalRecommendations(data: ConsumptionData, tariffs: Tar
       category: "behavior",
       priority: "medium",
       feasibility: "easy",
-      title: "Eine belastbare Verbrauchsbasis schaffen",
-      description: "Erfasse zwei Zählerstände und deine wichtigsten Geräte. Danach kann Energy Warden konkrete Einsparungen statt allgemeiner Tipps berechnen.",
+      title: "Build a reliable consumption baseline",
+      description: "Record two meter readings and your most important appliances. Energy Warden can then calculate specific savings instead of giving general tips.",
       annualSavingsKwh: 0,
       annualSavingsEur: 0,
-      effort: "Etwa 10 Minuten",
-      basedOn: "Noch unvollständige Verbrauchsdaten",
-      steps: ["Aktuellen Zählerstand erfassen.", "Mindestens ein häufig genutztes Gerät schätzen.", "Nach dem nächsten Zählerstand erneut hierher zurückkehren."],
+      effort: "About 10 minutes",
+      basedOn: "Incomplete consumption data",
+      steps: ["Record the current meter reading.", "Estimate at least one frequently used appliance.", "Return here after the next meter reading."],
       noHardware: true,
     });
   }

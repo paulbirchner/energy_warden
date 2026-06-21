@@ -18,8 +18,8 @@ export function CurrentPriceCard() {
   if (loading) {
     return (
       <section>
-        <h2>Aktueller Strompreis</h2>
-        <p>Lade aktuellen Strompreis...</p>
+        <h2>Current electricity price</h2>
+        <p>Loading current electricity price...</p>
       </section>
     );
   }
@@ -27,8 +27,8 @@ export function CurrentPriceCard() {
   if (error) {
     return (
       <section>
-        <h2>Aktueller Strompreis</h2>
-        <p>Aktueller Strompreis nicht verfügbar.</p>
+        <h2>Current electricity price</h2>
+        <p>The current electricity price is unavailable.</p>
       </section>
     );
   }
@@ -36,18 +36,18 @@ export function CurrentPriceCard() {
   if (price === null) {
     return (
       <section>
-        <h2>Aktueller Strompreis</h2>
-        <p>Kein aktueller Strompreis vorhanden.</p>
+        <h2>Current electricity price</h2>
+        <p>No current electricity price is available.</p>
       </section>
     );
   }
 
   return (
     <section>
-      <h2>Geschätzter Haushaltsstrompreis</h2>
+      <h2>Estimated household electricity price</h2>
       <p>
         <strong>{formatEstimatedHouseholdPrice(price)}</strong><br />
-        <small>Börsenanteil: {formatCentKwh(price)} · ohne Grundpreis</small>
+        <small>Wholesale component: {formatCentKwh(price)} · excluding base charge</small>
       </p>
     </section>
   );

@@ -30,7 +30,7 @@ export function getReportMonths(series: ReturnType<typeof buildMonthlySeries>) {
 
 /** Formatiert YYYY-MM als deutschen Monatsnamen mit Jahr. */
 export function formatReportMonth(key: string) {
-  return new Intl.DateTimeFormat("de-DE", { month: "long", year: "numeric" })
+  return new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric" })
     .format(new Date(`${key}-01T00:00:00`));
 }
 
@@ -87,7 +87,7 @@ export function buildMonthlyReport(
     achievedSavingsEur: completed.reduce((sum, entry) => sum + entry.annualSavingsEur / 12, 0),
     achievedSavingsKwh: completed.reduce((sum, entry) => sum + entry.annualSavingsKwh / 12, 0),
     openSavingsEur: open.reduce((sum, entry) => sum + entry.annualSavingsEur, 0),
-    dataSource: point ? point.estimated ? "Geräteschätzung" : "Erfasste Verbrauchsdaten" : "Keine Verbrauchsdaten",
+    dataSource: point ? point.estimated ? "Appliance estimate" : "Recorded consumption data" : "No consumption data",
     recommendations: open.slice(0, 3),
     hotspots,
   };
@@ -110,9 +110,9 @@ export function createConsumptionCsv(data: ConsumptionData, tariffs: Tariff[]) {
       tariff ? baseCost.toFixed(2) : "",
       tariff ? consumptionCost.toFixed(2) : "",
       tariff ? (baseCost + consumptionCost).toFixed(2) : "",
-      point.estimated ? "Geräteschätzung" : "Verbrauchsdaten",
+      point.estimated ? "Appliance estimate" : "Consumption data",
     ];
   });
-  const header = ["Monat", "Verbrauch (kWh)", "Grundpreis (EUR)", "Verbrauchskosten (EUR)", "Gesamtkosten (EUR)", "Datenquelle"];
+  const header = ["Month", "Consumption (kWh)", "Base charge (EUR)", "Consumption cost (EUR)", "Total cost (EUR)", "Data source"];
   return [header, ...rows].map((row) => row.map(csvValue).join(";")).join("\r\n");
 }

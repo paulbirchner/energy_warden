@@ -7,7 +7,7 @@ const HOUSEHOLD_PROFILE = [
   0.95, 1.25, 1.55, 1.65, 1.5, 1.2, 0.9, 0.7,
 ];
 
-const FLEXIBLE_DEVICE_PATTERN = /wasch|spül|geschirr|trockner|wallbox|lade|elektroauto|\bev\b/i;
+const FLEXIBLE_DEVICE_PATTERN = /wasch|spül|geschirr|trockner|washer|washing|dishwasher|dryer|wallbox|lade|charg|elektroauto|electric car|\bev\b/i;
 
 export type ShiftedDevice = {
   id: string;
@@ -45,8 +45,8 @@ function localHour(timestamp: number) {
 }
 
 function preferredStartHour(name: string) {
-  if (/geschirr|spül/i.test(name)) return 20;
-  if (/wallbox|lade|elektroauto|\bev\b/i.test(name)) return 19;
+  if (/geschirr|spül|dishwasher/i.test(name)) return 20;
+  if (/wallbox|lade|charg|elektroauto|electric car|\bev\b/i.test(name)) return 19;
   return 18;
 }
 

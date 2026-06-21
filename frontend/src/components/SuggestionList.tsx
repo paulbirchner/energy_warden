@@ -19,20 +19,19 @@ export function SuggestionList() {
 
   return (
     <section>
-      <h2>KI-Empfehlungen</h2>
+      <h2>AI recommendations</h2>
 
       <GenerateSuggestionsButton onGenerated={setSuggestions} />
 
-      {loading && <p>Lade Empfehlungen...</p>}
+      {loading && <p>Loading recommendations...</p>}
 
-      {error && <p>Empfehlungen konnten nicht geladen werden.</p>}
+      {error && <p>Recommendations could not be loaded.</p>}
 
       {!loading && !error && suggestions.length === 0 && (
         <>
-          <p>Noch keine Empfehlungen vorhanden.</p>
+          <p>No recommendations are available yet.</p>
           <p>
-            Klicke auf „Empfehlungen neu berechnen“, sobald das Backend
-            vorbereitet ist.
+            Select “Recalculate recommendations” once the backend is ready.
           </p>
         </>
       )}

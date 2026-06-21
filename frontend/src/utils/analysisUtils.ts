@@ -93,7 +93,7 @@ export function buildMonthlySeries(data: ConsumptionData): MonthlyPoint[] {
     .sort(([first], [second]) => first.localeCompare(second))
     .map(([key, consumption]) => ({
       key,
-      label: new Intl.DateTimeFormat("de-DE", { month: "short", year: "2-digit" })
+      label: new Intl.DateTimeFormat("en-GB", { month: "short", year: "2-digit" })
         .format(new Date(`${key}-01T00:00:00`))
         .replace(" ", " ’"),
       consumption,
@@ -148,7 +148,7 @@ export function buildForecast(series: MonthlyPoint[], tariff: Tariff | undefined
     const consumption = historicalMonth?.consumption ?? average;
     return {
       key: monthKey(date),
-      label: new Intl.DateTimeFormat("de-DE", { month: "short" }).format(date),
+      label: new Intl.DateTimeFormat("en-GB", { month: "short" }).format(date),
       consumption,
       cost: tariff.basePriceMonthly + tariff.unitPrice * consumption,
     };

@@ -1,10 +1,11 @@
-type IconName = "meter" | "invoice" | "upload" | "device" | "trash" | "check" | "tariff" | "calculator" | "compare" | "refresh" | "chart" | "hotspot" | "alert" | "trend" | "bell" | "clock" | "settings" | "close" | "recommendation" | "leaf" | "savings" | "report" | "download" | "print";
+type IconName = "meter" | "invoice" | "upload" | "device" | "camera" | "trash" | "check" | "tariff" | "calculator" | "compare" | "refresh" | "chart" | "hotspot" | "alert" | "trend" | "bell" | "clock" | "settings" | "close" | "recommendation" | "leaf" | "savings" | "report" | "download" | "print";
 
 const paths: Record<IconName, string> = {
   meter: "M4 19v-7a8 8 0 0 1 16 0v7M7 19h10M12 12l3-3M12 12h.01",
   invoice: "M6 3h9l3 3v15l-3-2-3 2-3-2-3 2V3Zm3 6h6M9 13h6",
   upload: "M12 16V4m0 0L7 9m5-5 5 5M5 20h14",
   device: "M7 3h10a2 2 0 0 1 2 2v14H5V5a2 2 0 0 1 2-2Zm2 12h6M9 7h6",
+  camera: "M4 7h3l1.5-2h7L17 7h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Zm8 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z",
   trash: "M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6",
   check: "m5 12 4 4L19 6",
   tariff: "M4 6.5V5a2 2 0 0 1 2-2h5.5L20 11.5 11.5 20 3 11.5V6.5h1Zm4 2h.01",

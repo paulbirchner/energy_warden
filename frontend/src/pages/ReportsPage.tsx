@@ -14,8 +14,8 @@ import {
   type MonthlyReport,
 } from "../utils/reportUtils";
 
-const decimal = new Intl.NumberFormat("de-DE", { maximumFractionDigits: 1 });
-const euro = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" });
+const decimal = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 });
+const euro = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR" });
 const currentMonthKey = new Date().toISOString().slice(0, 7);
 
 /** Erstellt die auswählbare Monatsberichtseite aus allen lokalen Fachdaten. */
@@ -46,7 +46,7 @@ export default function ReportsPage() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `energy-warden-verbrauch-${new Date().toISOString().slice(0, 10)}.csv`;
+    anchor.download = `energy-warden-consumption-${new Date().toISOString().slice(0, 10)}.csv`;
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -55,68 +55,68 @@ export default function ReportsPage() {
     <main className="page-content reports-page">
       <div className="page-heading heading-row no-print">
         <div>
-          <p className="eyebrow">Export &amp; Berichte</p>
-          <h1>Dein Energiebericht</h1>
-          <p className="subtitle">Monatlich automatisch aus deinen vorhandenen Verbrauchs-, Kosten- und Maßnahmendaten erstellt.</p>
+          <p className="eyebrow">Export &amp; reports</p>
+          <h1>Your energy report</h1>
+          <p className="subtitle">Automatically created each month from your existing consumption, cost and action data.</p>
         </div>
-        <span className="local-badge"><span /> Lokal generiert</span>
+        <span className="local-badge"><span /> Generated locally</span>
       </div>
 
       <section className="report-controls no-print">
-        <label>Berichtsmonat<select value={selectedMonth} onChange={(event) => setSelectedMonth(event.target.value)}>{months.map((month) => <option key={month} value={month}>{formatReportMonth(month)}</option>)}</select></label>
+        <label>Report month<select value={selectedMonth} onChange={(event) => setSelectedMonth(event.target.value)}>{months.map((month) => <option key={month} value={month}>{formatReportMonth(month)}</option>)}</select></label>
         <div className="report-actions">
-          <button className="secondary-report-button" type="button" onClick={downloadCsv}><Icon name="download" size={18} /> CSV exportieren</button>
-          <button className="primary-report-button" type="button" onClick={() => window.print()}><Icon name="print" size={18} /> Als PDF speichern</button>
+          <button className="secondary-report-button" type="button" onClick={downloadCsv}><Icon name="download" size={18} /> Export CSV</button>
+          <button className="primary-report-button" type="button" onClick={() => window.print()}><Icon name="print" size={18} /> Save as PDF</button>
         </div>
       </section>
 
       <article className="print-report">
         <header className="report-header">
-          <div className="report-brand"><span className="brand-mark">EW</span><span><strong>Energy Warden</strong><small>Persönlicher Energiebericht</small></span></div>
-          <div className="report-period"><small>Berichtszeitraum</small><strong>{report.monthLabel}</strong><span>Erstellt am {new Date().toLocaleDateString("de-DE")}</span></div>
+          <div className="report-brand"><span className="brand-mark">EW</span><span><strong>Energy Warden</strong><small>Personal energy report</small></span></div>
+          <div className="report-period"><small>Reporting period</small><strong>{report.monthLabel}</strong><span>Created on {new Date().toLocaleDateString("en-GB")}</span></div>
         </header>
 
         <div className="report-title">
-          <p className="eyebrow">Monatsbericht · FA-41</p>
-          <h2>Dein Monat auf einen Blick</h2>
-          <p>Verbrauch, Kosten und die wichtigsten nächsten Schritte kompakt zusammengefasst.</p>
+          <p className="eyebrow">Monthly report</p>
+          <h2>Your month at a glance</h2>
+          <p>A concise summary of consumption, costs and the most important next steps.</p>
         </div>
 
         <div className="report-kpis">
-          <ReportKpi label="Verbrauch" value={`${decimal.format(report.consumptionKwh)} kWh`} note={report.previousChange === null ? "Noch kein Vormonatsvergleich" : `${report.previousChange >= 0 ? "+" : ""}${decimal.format(report.previousChange)} % zum Vormonat`} tone={report.previousChange !== null && report.previousChange > 0 ? "warning" : "green"} />
-          <ReportKpi label="Gesamtkosten" value={report.totalCostEur === null ? "Tarif fehlt" : euro.format(report.totalCostEur)} note="Grund- und Verbrauchspreis" tone="blue" />
-          <ReportKpi label="Erreichte Einsparung" value={euro.format(report.achievedSavingsEur)} note={`${decimal.format(report.achievedSavingsKwh)} kWh geschätzt`} tone="green" />
-          <ReportKpi label="Offenes Potenzial" value={euro.format(report.openSavingsEur)} note="pro Jahr aus Maßnahmen" tone="gold" />
+          <ReportKpi label="Consumption" value={`${decimal.format(report.consumptionKwh)} kWh`} note={report.previousChange === null ? "No previous-month comparison yet" : `${report.previousChange >= 0 ? "+" : ""}${decimal.format(report.previousChange)}% vs previous month`} tone={report.previousChange !== null && report.previousChange > 0 ? "warning" : "green"} />
+          <ReportKpi label="Total cost" value={report.totalCostEur === null ? "Tariff missing" : euro.format(report.totalCostEur)} note="Base charge and consumption cost" tone="blue" />
+          <ReportKpi label="Savings achieved" value={euro.format(report.achievedSavingsEur)} note={`${decimal.format(report.achievedSavingsKwh)} kWh estimated`} tone="green" />
+          <ReportKpi label="Open potential" value={euro.format(report.openSavingsEur)} note="per year from actions" tone="gold" />
         </div>
 
         <div className="report-section report-development">
-          <div className="report-section-heading"><div><p className="eyebrow">Entwicklung</p><h3>Verbrauch der letzten Monate</h3></div><span>{report.dataSource}</span></div>
+          <div className="report-section-heading"><div><p className="eyebrow">Trend</p><h3>Consumption in recent months</h3></div><span>{report.dataSource}</span></div>
           <ReportChart points={chartPoints} selectedMonth={selectedMonth} />
         </div>
 
         <div className="report-two-columns">
           <section className="report-section">
-            <div className="report-section-heading"><div><p className="eyebrow">Kosten</p><h3>Monatliche Aufteilung</h3></div><Icon name="calculator" /></div>
+            <div className="report-section-heading"><div><p className="eyebrow">Costs</p><h3>Monthly breakdown</h3></div><Icon name="calculator" /></div>
             <CostBreakdown report={report} />
           </section>
           <section className="report-section">
-            <div className="report-section-heading"><div><p className="eyebrow">Hotspots</p><h3>Größte Verbrauchstreiber</h3></div><Icon name="hotspot" /></div>
+            <div className="report-section-heading"><div><p className="eyebrow">Hotspots</p><h3>Biggest consumption drivers</h3></div><Icon name="hotspot" /></div>
             <ReportHotspots report={report} />
           </section>
         </div>
 
         <section className="report-section report-recommendations">
-          <div className="report-section-heading"><div><p className="eyebrow">FA-43</p><h3>Die wichtigsten nächsten Maßnahmen</h3></div><Icon name="recommendation" /></div>
+          <div className="report-section-heading"><div><p className="eyebrow"></p><h3>The most important next actions</h3></div><Icon name="recommendation" /></div>
           <RecommendationSummary recommendations={report.recommendations} />
         </section>
 
-        <footer className="report-footer"><span>Energy Warden · {report.monthLabel}</span><span>Schätzwerte basieren auf deinen lokal erfassten Daten.</span></footer>
+        <footer className="report-footer"><span>Energy Warden · {report.monthLabel}</span><span>Estimates are based on your locally recorded data.</span></footer>
       </article>
 
       <section className="export-info-card no-print">
         <span className="icon-tile large"><Icon name="download" /></span>
-        <div><strong>Verbrauchs- und Kostendaten exportieren</strong><p>Die CSV-Datei enthält {series.length} Monatswerte und lässt sich in Excel, LibreOffice oder anderen Tabellenprogrammen öffnen.</p></div>
-        <button className="secondary-report-button" type="button" onClick={downloadCsv}>CSV herunterladen</button>
+        <div><strong>Export consumption and cost data</strong><p>The CSV file contains {series.length} monthly values and can be opened in Excel, LibreOffice or other spreadsheet applications.</p></div>
+        <button className="secondary-report-button" type="button" onClick={downloadCsv}>Download CSV</button>
       </section>
     </main>
   );
@@ -130,27 +130,27 @@ function ReportKpi({ label, value, note, tone }: { label: string; value: string;
 /** Rendert bis zu sechs Monatswerte und hebt den Berichtsmonat hervor. */
 function ReportChart({ points, selectedMonth }: { points: ReturnType<typeof buildMonthlySeries>; selectedMonth: string }) {
   const max = Math.max(...points.map((point) => point.consumption), 1);
-  if (points.length === 0) return <ReportEmpty text="Noch keine Verbrauchsdaten für eine Entwicklung vorhanden." />;
-  return <div className="report-chart" role="img" aria-label="Verbrauchsentwicklung der letzten Monate">{points.map((point) => <div className={point.key === selectedMonth ? "selected" : ""} key={point.key}><strong>{decimal.format(point.consumption)}</strong><span><i style={{ height: `${Math.max(5, point.consumption / max * 100)}%` } as CSSProperties} /></span><small>{point.label}</small></div>)}</div>;
+  if (points.length === 0) return <ReportEmpty text="No consumption data is available for a trend yet." />;
+  return <div className="report-chart" role="img" aria-label="Consumption trend over recent months">{points.map((point) => <div className={point.key === selectedMonth ? "selected" : ""} key={point.key}><strong>{decimal.format(point.consumption)}</strong><span><i style={{ height: `${Math.max(5, point.consumption / max * 100)}%` } as CSSProperties} /></span><small>{point.label}</small></div>)}</div>;
 }
 
 /** Teilt die Monatskosten visuell in Grund- und Verbrauchskosten auf. */
 function CostBreakdown({ report }: { report: MonthlyReport }) {
-  if (report.totalCostEur === null) return <ReportEmpty text="Lege einen aktuellen Stromtarif fest, um Kosten aufzuschlüsseln." />;
+  if (report.totalCostEur === null) return <ReportEmpty text="Set a current electricity tariff to break down costs." />;
   const baseShare = report.totalCostEur ? report.baseCostEur / report.totalCostEur * 100 : 0;
-  return <div className="report-costs"><div className="cost-ring" style={{ "--base-share": `${baseShare * 3.6}deg` } as CSSProperties}><span><strong>{euro.format(report.totalCostEur)}</strong><small>gesamt</small></span></div><div><span><i className="base" />Grundpreis <strong>{euro.format(report.baseCostEur)}</strong></span><span><i className="usage" />Verbrauch <strong>{euro.format(report.consumptionCostEur)}</strong></span></div></div>;
+  return <div className="report-costs"><div className="cost-ring" style={{ "--base-share": `${baseShare * 3.6}deg` } as CSSProperties}><span><strong>{euro.format(report.totalCostEur)}</strong><small>total</small></span></div><div><span><i className="base" />Base charge <strong>{euro.format(report.baseCostEur)}</strong></span><span><i className="usage" />Consumption <strong>{euro.format(report.consumptionCostEur)}</strong></span></div></div>;
 }
 
 /** Listet die größten gerätebezogenen Verbrauchsanteile des Berichts. */
 function ReportHotspots({ report }: { report: MonthlyReport }) {
-  if (report.hotspots.length === 0) return <ReportEmpty text="Geräteschätzungen ergänzen, um Hotspots anzuzeigen." />;
-  return <div className="report-hotspot-list">{report.hotspots.map((hotspot, index) => <div key={hotspot.name}><span><em>{index + 1}</em><strong>{hotspot.name}</strong></span><span><strong>{decimal.format(hotspot.share)} %</strong><small>{decimal.format(hotspot.consumptionKwh)} kWh/Jahr</small></span></div>)}</div>;
+  if (report.hotspots.length === 0) return <ReportEmpty text="Add appliance estimates to display hotspots." />;
+  return <div className="report-hotspot-list">{report.hotspots.map((hotspot, index) => <div key={hotspot.name}><span><em>{index + 1}</em><strong>{hotspot.name}</strong></span><span><strong>{decimal.format(hotspot.share)}%</strong><small>{decimal.format(hotspot.consumptionKwh)} kWh/year</small></span></div>)}</div>;
 }
 
 /** Fasst maximal drei priorisierte offene Maßnahmen druckfreundlich zusammen. */
 function RecommendationSummary({ recommendations }: { recommendations: LocalRecommendation[] }) {
-  if (recommendations.length === 0) return <ReportEmpty text="Aktuell sind keine offenen Empfehlungen vorhanden." />;
-  return <div className="report-recommendation-list">{recommendations.map((recommendation, index) => <article key={recommendation.id}><span>{index + 1}</span><div><strong>{recommendation.title}</strong><p>{recommendation.description}</p><small>{recommendation.effort} · {recommendation.noHardware ? "ohne Zusatzhardware" : "mit Hilfsmittel"}</small></div><em>{recommendation.annualSavingsEur > 0 ? `${euro.format(recommendation.annualSavingsEur)}/Jahr` : "Datengrundlage ergänzen"}</em></article>)}</div>;
+  if (recommendations.length === 0) return <ReportEmpty text="There are currently no open recommendations." />;
+  return <div className="report-recommendation-list">{recommendations.map((recommendation, index) => <article key={recommendation.id}><span>{index + 1}</span><div><strong>{recommendation.title}</strong><p>{recommendation.description}</p><small>{recommendation.effort} · {recommendation.noHardware ? "no additional hardware" : "with equipment"}</small></div><em>{recommendation.annualSavingsEur > 0 ? `${euro.format(recommendation.annualSavingsEur)}/year` : "Add more data"}</em></article>)}</div>;
 }
 
 /** Kompakter Bericht-Leerzustand bei fehlender Datenbasis. */

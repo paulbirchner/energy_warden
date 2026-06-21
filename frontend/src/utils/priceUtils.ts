@@ -26,7 +26,7 @@ export function estimatedHouseholdPriceCentKwh(priceEurMwh: number): number {
 /** Formatiert Centwerte und vermeidet bei sehr kleinen negativen Preisen die Anzeige „-0,00“. */
 function formatCentValue(value: number): string {
   const roundedValue = Math.abs(value) < 0.005 ? 0 : value;
-  return roundedValue.toFixed(2).replace(".", ",");
+  return roundedValue.toFixed(2);
 }
 
 /** Formatiert einen Euro/MWh-Wert direkt als deutsche Cent/kWh-Anzeige. */
@@ -41,6 +41,6 @@ export function formatEstimatedHouseholdPrice(priceEurMwh: number): string {
 
 /** Formatiert einen Geldbetrag mit zwei Nachkommastellen und Eurozeichen. */
 export function formatEuro(value: number): string {
-  return `${value.toFixed(2).replace(".", ",")} €`;
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR" }).format(value);
 }
 
